@@ -10,11 +10,22 @@ fn generate_html_style() -> String {
         table.year tr td {padding: 1mm; background: #999; height: 5mm; width: 5mm;}
         table.day tr td {padding: 3mm; background: #eee; height: 297mm; width: 210mm;}
 
+        div.header div.year {font-size: 20mm; padding: 5mm 60mm 2mm 20mm;}
+        div.tabs_side {padding: 25mm 2mm 0mm 0mm;}
         div.tabs_top div.tab {background: #ccc; border: 1mm #fff solid; display: inline-block; padding: 2mm; text-align: center; width: 30mm;}
-        div.tabs_side div.tab {background: #ccc; border: 1mm #fff solid; padding: 2mm; text-align: center; writing-mode: vertical-rl; text-orientation: mixed; height: 24mm; width: 10mm;}
+        div.tabs_side div.tab {background: #ccc; border: 1mm #fff solid; padding: 2mm; text-align: center; writing-mode: vertical-rl; text-orientation: mixed; height: 20mm; width: 10mm;}
     
-        div.tabs_top, div.tabs_side {float: left;}
+        div.header, div.header div.year, div.tabs_top, div.tabs_side {float: left;}
     </style>"##.to_owned()
+}
+
+fn generate_html_page_header() -> String {
+    r##"
+    <div class="header">
+        <div class="year">2021</div>
+    "##.to_owned()
+    + &generate_html_tabs_top()
+    + "</div>"
 }
 
 fn generate_html_tabs_top() -> String {
@@ -59,7 +70,7 @@ fn generate_html_year() -> String {
         html += "</tr>";
     }
     
-    generate_html_tabs_side() + &generate_html_tabs_top() + r##"<table class="year" name="year">"## + &html + "</table>"
+    generate_html_tabs_side() + &generate_html_page_header() + r##"<table class="year" name="year">"## + &html + "</table>"
 }
 
 fn generate_html_days() -> String {
@@ -67,7 +78,7 @@ fn generate_html_days() -> String {
     for month in 1..13 {
         html += "<tr>";
         for day in 1..32 {
-            let table = generate_html_tabs_side() + &generate_html_tabs_top() + r##"<table class="day" name="day_"## + &month.to_string() + "_" + &day.to_string() + r##""><tr><td></td></tr></table>"##;
+            let table = generate_html_tabs_side() + &generate_html_page_header() + r##"<table class="day" name="day_"## + &month.to_string() + "_" + &day.to_string() + r##""><tr><td></td></tr></table>"##;
             html += &table;
         }
     }
