@@ -4,6 +4,8 @@ fn generate_html_style() -> String {
     r##"
     <style>
         html,body {margin: 0px; padding: 0px;}
+        a,div,td,th {color: #000; font-size: 9px; text-decoration: none;}
+
         table {page-break-after: always;}
         table.year tr td {padding: 1mm; background: #999; height: 5mm; width: 5mm;}
         table.day tr td {padding: 3mm; background: #eee; height: 297mm; width: 210mm;}
