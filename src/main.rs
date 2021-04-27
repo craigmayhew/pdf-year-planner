@@ -11,10 +11,13 @@ fn generate_html_style() -> String {
         table.day tr td {padding: 3mm; background: #eee; height: 297mm; width: 210mm;}
 
         div.header div.year {font-size: 20mm; padding: 5mm 60mm 2mm 20mm;}
-        div.tabs_side {padding: 25mm 2mm 0mm 0mm;}
         div.tabs_top div.tab {background: #ccc; border: 1mm #fff solid; display: inline-block; padding: 2mm; text-align: center; width: 30mm;}
-        div.tabs_side div.tab {background: #ccc; border: 1mm #fff solid; padding: 2mm; text-align: center; writing-mode: vertical-rl; text-orientation: mixed; height: 20mm; width: 10mm;}
-    
+
+        div.tabs_side {padding: 25mm 2mm 0mm 0mm;}
+        div.tabs_side div.tab {background: #ccc; margin: 2mm; text-align: center; height: 20mm; width: 10mm;}
+        div.tabs_side div.tab div {font-size: 8mm; padding: 8mm 0mm 6mm 0mm; -webkit-transform: rotate(270deg); -webkit-transform-origin: center bottom auto;}
+
+        div.tabs_top div.tab {background: #ccc; border: 1mm #fff solid; display: inline-block; padding: 2mm; text-align: center; width: 30mm;}
         div.header, div.header div.year, div.tabs_top, div.tabs_side {float: left;}
     </style>"##.to_owned()
 }
@@ -41,24 +44,24 @@ fn generate_html_tabs_top() -> String {
 fn generate_html_tabs_side() -> String {
     r##"
     <div class="tabs_side">
-        <div class="tab jan">JAN</div>
-        <div class="tab feb">FEB</div>
-        <div class="tab mar">MAR</div>
-        <div class="tab apr">APR</div>
-        <div class="tab may">MAY</div>
-        <div class="tab jun">JUN</div>
-        <div class="tab jul">JUL</div>
-        <div class="tab aug">AUG</div>
-        <div class="tab sep">SEP</div>
-        <div class="tab oct">OCT</div>
-        <div class="tab nov">NOV</div>
-        <div class="tab dec">DEC</div>
+        <div class="tab jan"><div>JAN</div></div>
+        <div class="tab feb"><div>FEB</div></div>
+        <div class="tab mar"><div>MAR</div></div>
+        <div class="tab apr"><div>APR</div></div>
+        <div class="tab may"><div>MAY</div></div>
+        <div class="tab jun"><div>JUN</div></div>
+        <div class="tab jul"><div>JUL</div></div>
+        <div class="tab aug"><div>AUG</div></div>
+        <div class="tab sep"><div>SEP</div></div>
+        <div class="tab oct"><div>OCT</div></div>
+        <div class="tab nov"><div>NOV</div></div>
+        <div class="tab dec"><div>DEC</div></div>
     </div>
     "##.to_owned()
 }
 
 fn generate_html_year() -> String {
-    let mut html: String = "".to_owned();
+    let mut html: String = r##"<table id="page_year" class="year" name="year">"##.to_owned();
     for month in 1..13 {
         html += "<tr>";
         for day in 1..32 {
@@ -69,8 +72,9 @@ fn generate_html_year() -> String {
         }
         html += "</tr>";
     }
+    html += "</table>";
     
-    generate_html_tabs_side() + &generate_html_page_header() + r##"<table class="year" name="year">"## + &html + "</table>"
+    generate_html_tabs_side() + &generate_html_page_header() + &html
 }
 
 fn generate_html_days() -> String {
