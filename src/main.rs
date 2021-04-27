@@ -3,13 +3,48 @@ use wkhtmltopdf::*;
 fn generate_html_style() -> String {
     r##"
     <style>
+        html,body {margin: 0px; padding: 0px;}
         table {page-break-after: always;}
-        table.year tr td {padding: 3px; background: #999;}
-        table.day tr td {padding: 3px; background: #999; height: 20cm; width: 15cm;}
+        table.year tr td {padding: 1mm; background: #999;}
+        table.day tr td {padding: 3mm; background: #999; height: 297mm; width: 210mm;}
+
+        div.tabs_top div.tab {background: #ccc; border: 1mm #fff solid; padding: 2mm; text-align: center; width: 30mm;}
+        div.tabs_side div.tab {background: #ccc; border: 1mm #fff solid; padding: 2mm; text-align: center; writing-mode: vertical-rl; text-orientation: mixed; height: 24mm; width: 10mm;}
+    
+        div.tabs_top, div.tabs_side {float: left;}
     </style>"##.to_owned()
 }
 
-fn generate_html_table_year() -> String {
+fn generate_html_tabs_top() -> String {
+    r##"
+    <div class="tabs_top">
+        <div class="tab calendar">Calendar</div>
+        <div class="tab tasks">Tasks</div>
+        <div class="tab notes">Notes</div>
+    </div>
+    "##.to_owned()
+}
+
+fn generate_html_tabs_side() -> String {
+    r##"
+    <div class="tabs_side">
+        <div class="tab jan">JAN</div>
+        <div class="tab feb">FEB</div>
+        <div class="tab mar">MAR</div>
+        <div class="tab apr">APR</div>
+        <div class="tab may">MAY</div>
+        <div class="tab jun">JUN</div>
+        <div class="tab jul">JUL</div>
+        <div class="tab aug">AUG</div>
+        <div class="tab sep">SEP</div>
+        <div class="tab oct">OCT</div>
+        <div class="tab nov">NOV</div>
+        <div class="tab dec">DEC</div>
+    </div>
+    "##.to_owned()
+}
+
+fn generate_html_year() -> String {
     let mut html: String = "".to_owned();
     for month in 1..13 {
         html += "<tr>";
@@ -22,15 +57,15 @@ fn generate_html_table_year() -> String {
         html += "</tr>";
     }
     
-    r##"<table class="year" name="year">"##.to_owned() + &html + "</table>"
+    generate_html_tabs_side() + &generate_html_tabs_top() + r##"<table class="year" name="year">"## + &html + "</table>"
 }
 
-fn generate_html_table_days() -> String {
+fn generate_html_days() -> String {
     let mut html: String = "".to_owned();
     for month in 1..13 {
         html += "<tr>";
         for day in 1..32 {
-            let table = r##"<table class="day" name="day_"##.to_owned() + &month.to_string() + "_" + &day.to_string() + r##""><tr><td></td></tr></table>"##;
+            let table = generate_html_tabs_side() + &generate_html_tabs_top() + r##"<table class="day" name="day_"## + &month.to_string() + "_" + &day.to_string() + r##""><tr><td></td></tr></table>"##;
             html += &table;
         }
     }
@@ -38,7 +73,7 @@ fn generate_html_table_days() -> String {
 }
 
 fn main() -> std::io::Result<()> {
-    let html = "<html><head>".to_owned() + &generate_html_style() + "</head><body>" + &generate_html_table_year() + &generate_html_table_days() + "</body></html>";
+    let html = "<html><head>".to_owned() + &generate_html_style() + "</head><body>" + &generate_html_year() + &generate_html_days() + "</body></html>";
     let mut pdf_app = PdfApplication::new().expect("Failed to init PDF application");
     let mut pdfout = pdf_app.builder()
         .orientation(Orientation::Portrait)
