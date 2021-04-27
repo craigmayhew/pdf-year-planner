@@ -10,7 +10,8 @@ fn generate_html_style() -> String {
         table.year tr td {padding: 1mm; background: #999; height: 5mm; width: 5mm;}
         table.day tr td {padding: 3mm; background: #eee; height: 297mm; width: 210mm;}
 
-        div.header div.year {font-size: 20mm; padding: 5mm 60mm 2mm 20mm;}
+        div.header div.year {padding: 5mm 60mm 2mm 20mm;}
+        div.header div.year a {font-size: 20mm;}
         div.tabs_top div.tab {background: #ccc; border: 1mm #fff solid; display: inline-block; padding: 2mm; text-align: center; width: 30mm;}
 
         div.tabs_side {padding: 25mm 2mm 0mm 0mm;}
@@ -25,7 +26,7 @@ fn generate_html_style() -> String {
 fn generate_html_page_header() -> String {
     r##"
     <div class="header">
-        <div class="year">2021</div>
+        <div class="year"><a href="#page_year">2021</a></div>
     "##.to_owned()
     + &generate_html_tabs_top()
     + "</div>"
