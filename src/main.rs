@@ -3,26 +3,34 @@ use wkhtmltopdf::*;
 fn generate_html_style() -> String {
     r##"
     <style>
-        html,body {margin: 0px; padding: 0px;}
+        html,body,table,tr,td {margin: 0px; padding: 0px;}
         a,div,td,th {color: #000; font-size: 9px; text-decoration: none;}
 
-        table {page-break-after: always;}
+        table, div.page {page-break-after: always;}
         table.year tr td {padding: 1mm; background: #999; height: 5mm; width: 5mm;}
         table.day tr td {padding: 3mm; background: #eee; height: 297mm; width: 210mm;}
  
-        table.tasks tr td {padding: 3mm; background: #eee; height: 297mm; width: 210mm;}
-        table.notes tr td {padding: 3mm; background: #eee; height: 297mm; width: 210mm;}
+        div.page {padding: 3mm; height: 297mm; width: 220mm;}
 
         div.header div.year {padding: 5mm 60mm 2mm 20mm;}
         div.header div.year a {font-size: 20mm;}
-        div.tabs_top div.tab {background: #ccc; border: 1mm #fff solid; display: inline-block; padding: 2mm; text-align: center; width: 30mm;}
+        div.tabs_top div.tab a {font-size: 5mm;}
 
         div.tabs_side {padding: 25mm 2mm 0mm 0mm;}
-        div.tabs_side div.tab {background: #ccc; margin: 2mm; text-align: center; height: 20mm; width: 10mm;}
+        div.tabs_side div.tab {background: #ccc; margin: 2mm; text-align: center; height: 20mm; width: 10mm; border-radius: 1mm 0mm 0mm 1mm;}
         div.tabs_side div.tab div {font-size: 8mm; padding: 8mm 0mm 6mm 0mm; -webkit-transform: rotate(270deg); -webkit-transform-origin: center bottom auto;}
 
-        div.tabs_top div.tab {background: #ccc; border: 1mm #fff solid; display: inline-block; padding: 2mm; text-align: center; width: 30mm;}
-        div.header, div.header div.year, div.tabs_top, div.tabs_side {float: left;}
+        div.tabs_top div.tab {background: #ccc; display: inline-block; padding: 2mm; text-align: center; width: 30mm; border-radius: 1mm 1mm 0mm 0mm;}
+        div.header, div.header div.year, div.tabs_top, div.tabs_side, div.page {float: left;}
+
+        div.lines {
+            padding-top: 10px;
+            background-color: black;
+            background-image: -webkit-repeating-linear-gradient(90deg, transparent, transparent 1px, rgba(255, 255, 255, 1) 1px, rgba(255, 255, 255, 1) 25px);
+            width: 600px;
+            height: 600px;
+        }
+        
     </style>"##.to_owned()
 }
 
@@ -93,11 +101,11 @@ fn generate_html_days() -> String {
 }
 
 fn generate_html_tasks() -> String {
-    generate_html_tabs_side() + &generate_html_page_header() + r##"<table class="tasks" name="page_tasks"><tr><td></td></tr></table>"##
+    generate_html_tabs_side() + &generate_html_page_header() + r##"<div class="tasks page" name="page_tasks"></div>"##
 }
 
 fn generate_html_notes() -> String {
-    generate_html_tabs_side() + &generate_html_page_header() + r##"<table class="notes" name="page_notes"><tr><td></td></tr></table>"##
+    generate_html_tabs_side() + &generate_html_page_header() + r##"<div class="notes page lines" name="page_notes"></div>"##
 }
 
 fn main() -> std::io::Result<()> {
