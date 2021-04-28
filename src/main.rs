@@ -38,7 +38,7 @@ fn generate_html_page_header() -> String {
 fn generate_html_tabs_top() -> String {
     r##"
     <div class="tabs_top">
-        <div class="tab calendar">Calendar</div>
+        <div class="tab calendar"><a href="#page_year">Calendar</a></div>
         <div class="tab tasks"><a href="#page_tasks">Tasks</a></div>
         <div class="tab notes"><a href="#page_notes">Notes</a></div>
     </div>
