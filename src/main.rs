@@ -84,7 +84,6 @@ fn generate_html_year() -> String {
 fn generate_html_days() -> String {
     let mut html: String = "".to_owned();
     for month in 1..13 {
-        html += "<tr>";
         for day in 1..32 {
             let table = generate_html_tabs_side() + &generate_html_page_header() + r##"<table class="day" name="day_"## + &month.to_string() + "_" + &day.to_string() + r##""><tr><td></td></tr></table>"##;
             html += &table;
