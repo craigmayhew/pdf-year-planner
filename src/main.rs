@@ -9,6 +9,9 @@ fn generate_html_style() -> String {
         table {page-break-after: always;}
         table.year tr td {padding: 1mm; background: #999; height: 5mm; width: 5mm;}
         table.day tr td {padding: 3mm; background: #eee; height: 297mm; width: 210mm;}
+ 
+        table.tasks tr td {padding: 3mm; background: #eee; height: 297mm; width: 210mm;}
+        table.notes tr td {padding: 3mm; background: #eee; height: 297mm; width: 210mm;}
 
         div.header div.year {padding: 5mm 60mm 2mm 20mm;}
         div.header div.year a {font-size: 20mm;}
@@ -36,8 +39,8 @@ fn generate_html_tabs_top() -> String {
     r##"
     <div class="tabs_top">
         <div class="tab calendar">Calendar</div>
-        <div class="tab tasks">Tasks</div>
-        <div class="tab notes">Notes</div>
+        <div class="tab tasks"><a href="#page_tasks">Tasks</a></div>
+        <div class="tab notes"><a href="#page_notes">Notes</a></div>
     </div>
     "##.to_owned()
 }
@@ -90,8 +93,21 @@ fn generate_html_days() -> String {
     html
 }
 
+fn generate_html_tasks() -> String {
+    generate_html_tabs_side() + &generate_html_page_header() + r##"<table class="tasks" name="page_tasks"><tr><td></td></tr></table>"##
+}
+
+fn generate_html_notes() -> String {
+    generate_html_tabs_side() + &generate_html_page_header() + r##"<table class="notes" name="page_notes"><tr><td></td></tr></table>"##
+}
+
 fn main() -> std::io::Result<()> {
-    let html = "<html><head>".to_owned() + &generate_html_style() + "</head><body>" + &generate_html_year() + &generate_html_days() + "</body></html>";
+    let html = "<html><head>".to_owned() + &generate_html_style() + "</head><body>" +
+                &generate_html_year() +
+                &generate_html_days() +
+                &generate_html_tasks() +
+                &generate_html_notes() +
+               "</body></html>";
     let mut pdf_app = PdfApplication::new().expect("Failed to init PDF application");
     let mut pdfout = pdf_app.builder()
         .orientation(Orientation::Portrait)
