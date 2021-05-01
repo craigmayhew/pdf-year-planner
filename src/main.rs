@@ -30,6 +30,9 @@ fn generate_html_style() -> String {
             width: 600px;
             height: 600px;
         }
+
+        ul {list-style-type: circle;}
+        ul li {font-size: 12mm;}
         
     </style>"##.to_owned()
 }
