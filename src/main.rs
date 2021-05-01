@@ -6,8 +6,9 @@ fn generate_html_style() -> String {
         html,body,table,tr,td {margin: 0px; padding: 0px;}
         a,div,td,th {color: #000; font-size: 9px; text-decoration: none;}
 
-        table, div.page {page-break-after: always;}
-        table.year tr td {padding: 1mm; background: #999; height: 5mm; width: 5mm;}
+        div.page {page-break-after: always;}
+        table.year_month {width: 50mm; display: inline-block;}
+        table.year_month tr td {padding: 1mm; background: #999; height: 5mm; width: 5mm;}
         table.day tr td {padding: 3mm; background: #eee; height: 297mm; width: 210mm;}
  
         div.page {padding: 3mm; height: 297mm; width: 220mm;}
@@ -76,18 +77,21 @@ fn generate_html_tabs_side() -> String {
 }
 
 fn generate_html_year() -> String {
-    let mut html: String = r##"<table id="page_year" class="year" name="year">"##.to_owned();
+    let mut html: String = r##"<div id="page_year" class="year page" name="year">"##.to_owned();
     for month in 1..13 {
-        html += "<tr>";
+        html += r##"<table class="year_month">"##;
+        html += r##"<table class="year_month">"##;
         for day in 1..32 {
+            if day % 7 == 0 {html += "<tr>";}
             let link = "<a href=\"#day_".to_owned() + &month.to_string() + "_" + &day.to_string() + "\">" + &day.to_string() + "</a>";
             html += "<td>";
             html += &link;
             html += "</td>";
+            if day % 7 == 0 {html += "</tr>";}
         }
-        html += "</tr>";
+        html += "</table>";
     }
-    html += "</table>";
+    html += "</div>";
     
     generate_html_tabs_side() + &generate_html_page_header() + &html
 }
