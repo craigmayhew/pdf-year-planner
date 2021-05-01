@@ -1,5 +1,4 @@
 use chrono::{Datelike, DateTime, NaiveDate, NaiveDateTime, Utc};
-use time::util::is_leap_year;
 use wkhtmltopdf::*;
 
 fn generate_html_style() -> String {
@@ -77,6 +76,16 @@ fn generate_html_tabs_side() -> String {
         <div class="tab dec"><div>DEC</div></div>
     </div>
     "##.to_owned()
+}
+
+fn is_leap_year (year: i32) -> bool {
+    if year % 4 == 0 && year % 100 == 0 && year % 400 == 0 {
+        true
+    } else if year % 4 == 0 && year % 100 != 0 && year % 400 == 0 {
+        true
+    } else {
+        false
+    }
 }
 
 fn number_of_days_in_month(year: &str, month: u32) -> u32 {
