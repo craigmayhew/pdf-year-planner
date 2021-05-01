@@ -39,11 +39,10 @@ fn generate_html_style() -> String {
     </style>"##.to_owned()
 }
 
-fn generate_html_page_header() -> String {
-    r##"
-    <div class="header">
-        <div class="year"><a href="#page_year">2021</a></div>
-    "##.to_owned()
+fn generate_html_page_header(year: &str) -> String {
+    "<div class=\"header\">
+        <div class=\"year\"><a href=\"#page_year\">".to_owned() + &year + "</a></div>
+    "
     + &generate_html_tabs_top()
     + "</div>"
 }
@@ -77,7 +76,7 @@ fn generate_html_tabs_side() -> String {
     "##.to_owned()
 }
 
-fn generate_html_year() -> String {
+fn generate_html_year(year: &str) -> String {
     let mut html: String = r##"<div id="page_year" class="year page" name="year">"##.to_owned();
     for month in 1..13 {
         html += r##"<table class="year_month">"##;
@@ -94,44 +93,52 @@ fn generate_html_year() -> String {
     }
     html += "</div>";
     
-    generate_html_tabs_side() + &generate_html_page_header() + &html
+    generate_html_tabs_side() + &generate_html_page_header(year) + &html
 }
 
-fn generate_html_days() -> String {
+fn generate_html_days(year: &str) -> String {
     let mut html: String = "".to_owned();
     for month in 1..13 {
         for day in 1..32 {
-            let table = generate_html_tabs_side() + &generate_html_page_header() + r##"<table class="day" name="day_"## + &month.to_string() + "_" + &day.to_string() + r##""><tr><td></td></tr></table>"##;
+            let table = generate_html_tabs_side() + &generate_html_page_header(year) + r##"<table class="day" name="day_"## + &month.to_string() + "_" + &day.to_string() + r##""><tr><td></td></tr></table>"##;
             html += &table;
         }
     }
     html
 }
 
-fn generate_html_tasks() -> String {
-    generate_html_tabs_side() + &generate_html_page_header() + 
+fn generate_html_tasks(year: &str) -> String {
+    generate_html_tabs_side() + &generate_html_page_header(year) + 
     r##"<div class="tasks page" name="page_tasks"><ul><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul></div>"##
 }
 
-fn generate_html_notes() -> String {
-    generate_html_tabs_side() + &generate_html_page_header() + r##"<div class="notes page lines" name="page_notes"></div>"##
+fn generate_html_notes(year: &str) -> String {
+    generate_html_tabs_side() + &generate_html_page_header(year) + r##"<div class="notes page lines" name="page_notes"></div>"##
 }
 
 fn main() -> std::io::Result<()> {
+    let mut chosen_year = "2021";
+    let title = chosen_year.to_string() + " Year Planner";
+
+    // generate html
     let html = "<html><head>".to_owned() + &generate_html_style() + "</head><body>" +
-                &generate_html_year() +
-                &generate_html_days() +
-                &generate_html_tasks() +
-                &generate_html_notes() +
+                &generate_html_year(chosen_year) +
+                &generate_html_days(chosen_year) +
+                &generate_html_tasks(chosen_year) +
+                &generate_html_notes(chosen_year) +
                "</body></html>";
+
+    // turn html into a pdf
     let mut pdf_app = PdfApplication::new().expect("Failed to init PDF application");
     let mut pdfout = pdf_app.builder()
         .orientation(Orientation::Portrait)
         .page_size(PageSize::A4)
         .margin(Size::Millimeters(5))
-        .title("2021 Year Planner")
+        .title(&title)
         .build_from_html(&html)
         .expect("failed to build pdf");
-    pdfout.save("2021.pdf").expect("failed to save foo.pdf");
+    
+    //save the pdf
+    pdfout.save(chosen_year.to_string() + ".pdf").expect("failed to save foo.pdf");
     Ok(())
 }
