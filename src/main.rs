@@ -118,6 +118,8 @@ fn generate_html_notes(year: &str) -> String {
 fn main() -> std::io::Result<()> {
     let mut chosen_year = "2021";
     let title = chosen_year.to_string() + " Year Planner";
+    let filename = chosen_year.to_string() + ".pdf";
+    let error_pdf_save = "failed to save ".to_owned() + &filename;
 
     // generate html
     let html = "<html><head>".to_owned() + &generate_html_style() + "</head><body>" +
@@ -138,6 +140,6 @@ fn main() -> std::io::Result<()> {
         .expect("failed to build pdf");
     
     //save the pdf
-    pdfout.save(chosen_year.to_string() + ".pdf").expect("failed to save foo.pdf");
+    pdfout.save(&filename).expect(&error_pdf_save);
     Ok(())
 }
