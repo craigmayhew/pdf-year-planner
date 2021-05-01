@@ -149,10 +149,11 @@ fn generate_html_year(year: &str) -> String {
 
 fn generate_html_days(year: &str) -> String {
     let mut html: String = "".to_owned();
-    for month in 1..13 {
-        for day in 1..32 {
             let table = generate_html_tabs_side() + &generate_html_page_header(year) + r##"<table class="day" name="day_"## + &month.to_string() + "_" + &day.to_string() + r##""><tr><td></td></tr></table>"##;
             html += &table;
+    for month in 1..=12 {
+        let days_in_month = number_of_days_in_month(year, month);
+        for day in 1..=days_in_month {
         }
     }
     html
