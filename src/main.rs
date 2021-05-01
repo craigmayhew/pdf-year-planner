@@ -24,11 +24,11 @@ fn generate_html_style() -> String {
         div.header, div.header div.year, div.tabs_top, div.tabs_side, div.page {float: left;}
 
         div.lines {
-            padding-top: 10px;
-            background-color: black;
-            background-image: -webkit-repeating-linear-gradient(90deg, transparent, transparent 1px, rgba(255, 255, 255, 1) 1px, rgba(255, 255, 255, 1) 25px);
-            width: 600px;
-            height: 600px;
+            padding-top: 25px;
+            background-color: #000;
+            background-image: -webkit-repeating-linear-gradient(#fff 1px, #fff 20px, #000 20px, #000 21px);
+            width: 220mm;
+            height: 290mm;
         }
 
         ul {list-style-type: circle;}
