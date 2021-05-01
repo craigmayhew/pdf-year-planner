@@ -1,4 +1,5 @@
 use chrono::{Datelike, DateTime, NaiveDate, NaiveDateTime, Utc};
+use time::util::is_leap_year;
 use wkhtmltopdf::*;
 
 fn generate_html_style() -> String {
@@ -9,9 +10,9 @@ fn generate_html_style() -> String {
 
         div.page {page-break-after: always; padding: 3mm; height: 297mm; width: 220mm;}
 
-        div.year_month {text-align: center; width: 50mm; height: 50mm; display: inline-block;}
-        div.year_month div.title {text-align: center; width: 50mm; height: 5mm; display: inline-block;}
-        div.year_month a div {background: #eee; height: 5mm; padding: 1mm; text-align: center; vertical-align: middle; width: 5mm; display: inline-block;}
+        div.year_month {text-align: center; width: 70mm; height: 70mm; display: inline-block;}
+        div.year_month div.title {text-align: center; width: 100%; height: 5mm; display: inline-block;}
+        div.year_month a div {background: #eee; height: 5mm; padding: 2mm; text-align: center; vertical-align: middle; width: 6mm; display: inline-block;}
         div.year_month a div.weekend {color: #aaa;}
 
         table.day tr td {padding: 3mm; background: #eee; height: 297mm; width: 210mm;}
@@ -78,24 +79,38 @@ fn generate_html_tabs_side() -> String {
     "##.to_owned()
 }
 
+fn number_of_days_in_month(year: &str, month: u32) -> u32 {
+    if month == 2 && is_leap_year(year.parse::<i32>().unwrap()) {
+        29
+    } else {
+        match month {
+            2 => 28,
+            4 | 6 | 9 | 11 => 30,
+            _ => 31
+        }
+    }
+}
+
 fn generate_html_year(year: &str) -> String {
     let naive_date: NaiveDateTime = NaiveDate::from_ymd(year.parse::<i32>().unwrap(), 1, 1).and_hms(1, 1, 1);
     let mut html: String = r##"<div id="page_year" class="year page" name="year">"##.to_owned();
-    for month in 1..13 {
+    for month in 1..=12 {
         let mut date = DateTime::<Utc>::from_utc(naive_date.with_month(month).unwrap(), Utc);
+        let days_in_month = number_of_days_in_month(year, month);
+        let mut spacer_days_at_front: usize = 0;
 
         html += "<div class=\"year_month\">";
             html += "<div class=\"title\">";
             html += &date.format("%B").to_string();
             html += "</div>";
-            for day in 1..28 {
+            for day in 1..=days_in_month {
                 //set date
                 date = DateTime::<Utc>::from_utc(naive_date.with_month(month).unwrap().with_day(day).unwrap(), Utc);
                 let formatted_date = date.weekday();
 
                 //add spacing at front of month if required
                 if day == 1 {
-                    let empty_days: usize = match formatted_date {
+                    spacer_days_at_front = match formatted_date {
                         chrono::Weekday::Mon => 0,
                         chrono::Weekday::Tue => 1,
                         chrono::Weekday::Wed => 2,
@@ -104,7 +119,7 @@ fn generate_html_year(year: &str) -> String {
                         chrono::Weekday::Sat => 5,
                         chrono::Weekday::Sun => 6,
                     };
-                    html += &"<a><div></div></a>".repeat(empty_days);
+                    html += &"<a><div></div></a>".repeat(spacer_days_at_front);
                 }
 
                 //figure out weekends for colour change
@@ -114,6 +129,8 @@ fn generate_html_year(year: &str) -> String {
                 let link = "<a href=\"#day_".to_owned() + &month.to_string() + "_" + &day.to_string() + "\"><div class=\""+weekend+"\">" + &day.to_string() + "</div></a>";
                 html += &link;
             }
+            //add spacing at end of month if required
+            html += &"<a><div></div></a>".repeat(42 as usize - spacer_days_at_front as usize - days_in_month as usize);
         html += "</div>";
     }
     html += "</div>";
