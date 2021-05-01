@@ -1,3 +1,4 @@
+use chrono::{NaiveDate};
 use wkhtmltopdf::*;
 
 fn generate_html_style() -> String {

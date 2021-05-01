@@ -11,4 +11,5 @@ edition = "2018"
 [features]
 
 [dependencies]
+chrono = "0.4"
 wkhtmltopdf = "0.3"
