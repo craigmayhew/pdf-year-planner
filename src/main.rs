@@ -4,7 +4,7 @@ use wkhtmltopdf::*;
 fn generate_html_style() -> String {
     r##"
     <style>
-        html,body,table,tr,td {margin: 0px; padding: 0px;}
+        html,body,table,tr,td,ul {margin: 0px; padding: 0px;}
         a,div,td,th {color: #000; font-size: 9px; text-decoration: none;}
 
         div.page {page-break-after: always; padding: 3mm; height: 297mm; width: 220mm;}
@@ -25,16 +25,11 @@ fn generate_html_style() -> String {
         div.tabs_top div.tab {background: #ccc; display: inline-block; padding: 2mm; text-align: center; width: 30mm; border-radius: 2mm 2mm 0mm 0mm;}
         div.header, div.header div.year, div.tabs_top, div.tabs_side, div.page {float: left;}
 
-        div.lines {
-            padding-top: 25px;
-            background-color: #000;
-            background-image: -webkit-repeating-linear-gradient(#fff 1px, #fff 20px, #000 20px, #000 21px);
-            width: 220mm;
-            height: 290mm;
+        ul {list-style-type: none;}
+        ul li {font-size: 12mm; border-bottom: 1px solid #eee; width: 100%;}
+        ul.circle li::before {
+            content: "☐ ";
         }
-
-        ul {list-style-type: circle;}
-        ul li {font-size: 12mm;}
         
     </style>"##.to_owned()
 }
@@ -159,11 +154,11 @@ fn generate_html_days(year: &str) -> String {
 
 fn generate_html_tasks(year: &str) -> String {
     generate_html_tabs_side() + &generate_html_page_header(year) + 
-    r##"<div class="tasks page" name="page_tasks"><ul><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul></div>"##
+    r##"<div class="tasks page" name="page_tasks"><ul class="circle"><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul></div>"##
 }
 
 fn generate_html_notes(year: &str) -> String {
-    generate_html_tabs_side() + &generate_html_page_header(year) + r##"<div class="notes page lines" name="page_notes"></div>"##
+    generate_html_tabs_side() + &generate_html_page_header(year) + r##"<div class="notes page" name="page_notes"><ul>"## + &"<li>&nbsp;</li>".repeat(21) + "</ul></div>"
 }
 
 fn main() -> std::io::Result<()> {
@@ -173,7 +168,7 @@ fn main() -> std::io::Result<()> {
     let error_pdf_save = "failed to save ".to_owned() + &filename;
 
     // generate html
-    let html = "<html><head>".to_owned() + &generate_html_style() + "</head><body>" +
+    let html = r##"<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">"##.to_owned() + &generate_html_style() + "</head><body>" +
                 &generate_html_year(chosen_year) +
                 &generate_html_days(chosen_year) +
                 &generate_html_tasks(chosen_year) +
