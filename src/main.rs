@@ -19,10 +19,10 @@ fn generate_html_style() -> String {
         div.tabs_top div.tab a {font-size: 5mm;}
 
         div.tabs_side {padding: 25mm 2mm 0mm 0mm;}
-        div.tabs_side div.tab {background: #ccc; margin: 2mm; text-align: center; height: 20mm; width: 10mm; border-radius: 2mm 0mm 0mm 2mm;}
+        div.tabs_side div.tab {border: solid #ccc 1px; margin: 2mm; text-align: center; height: 20mm; width: 10mm; border-radius: 2mm 0mm 0mm 2mm;}
         div.tabs_side div.tab div {font-size: 8mm; padding: 8mm 0mm 6mm 0mm; -webkit-transform: rotate(270deg); -webkit-transform-origin: center bottom auto;}
 
-        div.tabs_top div.tab {background: #ccc; display: inline-block; padding: 2mm; text-align: center; width: 30mm; border-radius: 2mm 2mm 0mm 0mm;}
+        div.tabs_top div.tab {border: solid #ccc 1px; display: inline-block; margin-top: 12mm; padding: 3mm 2mm 1mm 2mm; text-align: center; width: 30mm; border-radius: 2mm 2mm 0mm 0mm;}
         div.header, div.header div.year, div.tabs_top, div.tabs_side, div.page {float: left;}
 
         ul {list-style-type: none;}
