@@ -1,4 +1,4 @@
-use chrono::{Date, Datelike, DateTime, NaiveDate, NaiveDateTime, Utc};
+use chrono::{Datelike, DateTime, NaiveDate, NaiveDateTime, Utc};
 use wkhtmltopdf::*;
 
 fn generate_html_style() -> String {
@@ -79,7 +79,7 @@ fn generate_html_tabs_side() -> String {
 }
 
 fn generate_html_year(year: &str) -> String {
-    let mut naive_date: NaiveDateTime = NaiveDate::from_ymd(year.parse::<i32>().unwrap(), 1, 1).and_hms(1, 1, 1);
+    let naive_date: NaiveDateTime = NaiveDate::from_ymd(year.parse::<i32>().unwrap(), 1, 1).and_hms(1, 1, 1);
     let mut html: String = r##"<div id="page_year" class="year page" name="year">"##.to_owned();
     for month in 1..13 {
         let mut date = DateTime::<Utc>::from_utc(naive_date.with_month(month).unwrap(), Utc);
