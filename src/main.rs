@@ -9,9 +9,9 @@ fn generate_html_style() -> String {
 
         div.page {page-break-after: always; padding: 3mm; height: 297mm; width: 220mm;}
 
-        div.year_month {text-align: center; width: 70mm; height: 70mm; display: inline-block;}
-        div.year_month div.title {text-align: center; width: 100%; height: 5mm; display: inline-block;}
-        div.year_month a div {background: #eee; height: 5mm; padding: 2mm; text-align: center; vertical-align: middle; width: 6mm; display: inline-block;}
+        div.year_month {text-align: center; width: 68mm; height: 70mm; display: inline-block; margin-right: 5mm;}
+        div.year_month div.title {border-bottom: 1px #000 solid; font-size: 6mm; text-align: center; width: 100%; height: 7mm; display: inline-block;}
+        div.year_month a div {font-size: 4mm; height: 5mm; padding: 2mm; text-align: center; vertical-align: middle; width: 6mm; display: inline-block; font-weight: bold;}
         div.year_month a div.weekend {color: #aaa;}
 
         table.day tr td {padding: 3mm; background: #eee; height: 297mm; width: 210mm;}
