@@ -80,7 +80,6 @@ fn generate_html_year(year: &str) -> String {
     let mut html: String = r##"<div id="page_year" class="year page" name="year">"##.to_owned();
     for month in 1..13 {
         html += r##"<table class="year_month">"##;
-        html += r##"<table class="year_month">"##;
         for day in 1..32 {
             if day % 7 == 0 {html += "<tr>";}
             let link = "<a href=\"#day_".to_owned() + &month.to_string() + "_" + &day.to_string() + "\">" + &day.to_string() + "</a>";
