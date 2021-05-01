@@ -14,8 +14,6 @@ fn generate_html_style() -> String {
         div.year_month a div {font-size: 4mm; height: 5mm; padding: 2mm; text-align: center; vertical-align: middle; width: 6mm; display: inline-block; font-weight: bold;}
         div.year_month a div.weekend {color: #aaa;}
 
-        table.day tr td {padding: 3mm; background: #eee; height: 297mm; width: 210mm;}
-
         div.header div.year {padding: 5mm 60mm 2mm 20mm;}
         div.header div.year a {font-size: 20mm;}
         div.tabs_top div.tab a {font-size: 5mm;}
@@ -149,11 +147,11 @@ fn generate_html_year(year: &str) -> String {
 
 fn generate_html_days(year: &str) -> String {
     let mut html: String = "".to_owned();
-            let table = generate_html_tabs_side() + &generate_html_page_header(year) + r##"<table class="day" name="day_"## + &month.to_string() + "_" + &day.to_string() + r##""><tr><td></td></tr></table>"##;
-            html += &table;
     for month in 1..=12 {
         let days_in_month = number_of_days_in_month(year, month);
         for day in 1..=days_in_month {
+            let day_html = generate_html_tabs_side() + &generate_html_page_header(year) + r##"<div class="day page" name="day_"## + &month.to_string() + "_" + &day.to_string() + r##"" style="background-color: #f3f3f3;"></div>"##;
+            html += &day_html;
         }
     }
     html
