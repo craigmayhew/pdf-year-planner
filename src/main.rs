@@ -17,10 +17,10 @@ fn generate_html_style() -> String {
         div.tabs_top div.tab a {font-size: 5mm;}
 
         div.tabs_side {padding: 25mm 2mm 0mm 0mm;}
-        div.tabs_side div.tab {background: #ccc; margin: 2mm; text-align: center; height: 20mm; width: 10mm; border-radius: 1mm 0mm 0mm 1mm;}
+        div.tabs_side div.tab {background: #ccc; margin: 2mm; text-align: center; height: 20mm; width: 10mm; border-radius: 2mm 0mm 0mm 2mm;}
         div.tabs_side div.tab div {font-size: 8mm; padding: 8mm 0mm 6mm 0mm; -webkit-transform: rotate(270deg); -webkit-transform-origin: center bottom auto;}
 
-        div.tabs_top div.tab {background: #ccc; display: inline-block; padding: 2mm; text-align: center; width: 30mm; border-radius: 1mm 1mm 0mm 0mm;}
+        div.tabs_top div.tab {background: #ccc; display: inline-block; padding: 2mm; text-align: center; width: 30mm; border-radius: 2mm 2mm 0mm 0mm;}
         div.header, div.header div.year, div.tabs_top, div.tabs_side, div.page {float: left;}
 
         div.lines {
@@ -101,7 +101,8 @@ fn generate_html_days() -> String {
 }
 
 fn generate_html_tasks() -> String {
-    generate_html_tabs_side() + &generate_html_page_header() + r##"<div class="tasks page" name="page_tasks"></div>"##
+    generate_html_tabs_side() + &generate_html_page_header() + 
+    r##"<div class="tasks page" name="page_tasks"><ul><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul></div>"##
 }
 
 fn generate_html_notes() -> String {
