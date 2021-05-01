@@ -12,7 +12,7 @@ fn generate_html_style() -> String {
         div.year_month {text-align: center; width: 50mm; height: 50mm; display: inline-block;}
         div.year_month div.title {text-align: center; width: 50mm; height: 5mm; display: inline-block;}
         div.year_month a div {background: #eee; height: 5mm; padding: 1mm; text-align: center; vertical-align: middle; width: 5mm; display: inline-block;}
-        div.year_month a div.weekend {background: #aaa;}
+        div.year_month a div.weekend {color: #aaa;}
 
         table.day tr td {padding: 3mm; background: #eee; height: 297mm; width: 210mm;}
 
