@@ -1,4 +1,4 @@
-use chrono::{NaiveDate};
+use chrono::{Date, Datelike, DateTime, NaiveDate, NaiveDateTime, Utc};
 use wkhtmltopdf::*;
 
 fn generate_html_style() -> String {
@@ -7,12 +7,14 @@ fn generate_html_style() -> String {
         html,body,table,tr,td {margin: 0px; padding: 0px;}
         a,div,td,th {color: #000; font-size: 9px; text-decoration: none;}
 
-        div.page {page-break-after: always;}
-        table.year_month {width: 50mm; display: inline-block;}
-        table.year_month tr td {padding: 1mm; background: #999; height: 5mm; width: 5mm;}
+        div.page {page-break-after: always; padding: 3mm; height: 297mm; width: 220mm;}
+
+        div.year_month {text-align: center; width: 50mm; height: 50mm; display: inline-block;}
+        div.year_month div.title {text-align: center; width: 50mm; height: 5mm; display: inline-block;}
+        div.year_month a div {background: #eee; height: 5mm; padding: 1mm; text-align: center; vertical-align: middle; width: 5mm; display: inline-block;}
+        div.year_month a div.weekend {background: #aaa;}
+
         table.day tr td {padding: 3mm; background: #eee; height: 297mm; width: 210mm;}
- 
-        div.page {padding: 3mm; height: 297mm; width: 220mm;}
 
         div.header div.year {padding: 5mm 60mm 2mm 20mm;}
         div.header div.year a {font-size: 20mm;}
@@ -77,18 +79,24 @@ fn generate_html_tabs_side() -> String {
 }
 
 fn generate_html_year(year: &str) -> String {
+    let mut naive_date: NaiveDateTime = NaiveDate::from_ymd(year.parse::<i32>().unwrap(), 1, 1).and_hms(1, 1, 1);
     let mut html: String = r##"<div id="page_year" class="year page" name="year">"##.to_owned();
     for month in 1..13 {
-        html += r##"<table class="year_month">"##;
-        for day in 1..32 {
-            if day % 7 == 0 {html += "<tr>";}
-            let link = "<a href=\"#day_".to_owned() + &month.to_string() + "_" + &day.to_string() + "\">" + &day.to_string() + "</a>";
-            html += "<td>";
-            html += &link;
-            html += "</td>";
-            if day % 7 == 0 {html += "</tr>";}
-        }
-        html += "</table>";
+        let mut date = DateTime::<Utc>::from_utc(naive_date.with_month(month).unwrap(), Utc);
+
+        html += "<div class=\"year_month\">";
+            html += "<div class=\"title\">";
+            html += &date.format("%B").to_string();
+            html += "</div>";
+            for day in 1..28 {
+                date = DateTime::<Utc>::from_utc(naive_date.with_month(month).unwrap().with_day(day).unwrap(), Utc);
+                let formatted_date = date.weekday();
+                let weekend = if formatted_date == chrono::Weekday::Sat || formatted_date == chrono::Weekday::Sun {"weekend"} else {""};
+                
+                let link = "<a href=\"#day_".to_owned() + &month.to_string() + "_" + &day.to_string() + "\"><div class=\""+weekend+"\">" + &day.to_string() + "</div></a>";
+                html += &link;
+            }
+        html += "</div>";
     }
     html += "</div>";
     
