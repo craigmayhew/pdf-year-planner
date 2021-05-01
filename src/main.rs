@@ -89,10 +89,28 @@ fn generate_html_year(year: &str) -> String {
             html += &date.format("%B").to_string();
             html += "</div>";
             for day in 1..28 {
+                //set date
                 date = DateTime::<Utc>::from_utc(naive_date.with_month(month).unwrap().with_day(day).unwrap(), Utc);
                 let formatted_date = date.weekday();
+
+                //add spacing at front of month if required
+                if day == 1 {
+                    let empty_days: usize = match formatted_date {
+                        chrono::Weekday::Mon => 0,
+                        chrono::Weekday::Tue => 1,
+                        chrono::Weekday::Wed => 2,
+                        chrono::Weekday::Thu => 3,
+                        chrono::Weekday::Fri => 4,
+                        chrono::Weekday::Sat => 5,
+                        chrono::Weekday::Sun => 6,
+                    };
+                    html += &"<a><div></div></a>".repeat(empty_days);
+                }
+
+                //figure out weekends for colour change
                 let weekend = if formatted_date == chrono::Weekday::Sat || formatted_date == chrono::Weekday::Sun {"weekend"} else {""};
                 
+                //create the html for the day link within the calendar month
                 let link = "<a href=\"#day_".to_owned() + &month.to_string() + "_" + &day.to_string() + "\"><div class=\""+weekend+"\">" + &day.to_string() + "</div></a>";
                 html += &link;
             }
