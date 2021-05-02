@@ -1,4 +1,4 @@
-# PDF Year Calendar
+# PDF Year Planner
 
 This is a rust project that generates pdf year planners full of linked pages for devices such as the Remarkable.
 
