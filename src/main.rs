@@ -16,12 +16,13 @@ fn generate_html_style() -> String {
             height: 297mm;
             padding: 3mm;
             page-break-after: always;
-            width: 220mm;
+            width: 225mm;
         }
         div.year_month {
             display: inline-block;
             height: 70mm;
-            margin-right: 5mm;
+            margin-left: 7mm;
+            margin-top: 8mm;
             text-align: center;
             width: 68mm;
         }
@@ -46,7 +47,7 @@ fn generate_html_style() -> String {
             color: #aaa;
         }
         div.header div.year {
-            padding: 5mm 60mm 2mm 20mm;
+            padding: 5mm 60mm 2mm 30mm;
         }
         div.header div.year a {
             font-size: 20mm;
@@ -200,7 +201,7 @@ fn generate_html_year(year: &str) -> String {
     }
     html += "</div>";
     
-    generate_html_tabs_side() + &generate_html_page_header(year) + &html
+    generate_html_page_header(year) + &generate_html_tabs_side() + &html
 }
 
 fn generate_html_days(year: &str) -> String {
@@ -208,7 +209,7 @@ fn generate_html_days(year: &str) -> String {
     for month in 1..=12 {
         let days_in_month = number_of_days_in_month(year, month);
         for day in 1..=days_in_month {
-            let day_html = generate_html_tabs_side() + &generate_html_page_header(year) + r##"<div class="day page" name="day_"## + &month.to_string() + "_" + &day.to_string() + r##"" style="background-color: #f3f3f3;"></div>"##;
+            let day_html = generate_html_page_header(year) + &generate_html_tabs_side() + r##"<div class="day page" name="day_"## + &month.to_string() + "_" + &day.to_string() + r##"" style="background-color: #f3f3f3;"></div>"##;
             html += &day_html;
         }
     }
@@ -216,12 +217,12 @@ fn generate_html_days(year: &str) -> String {
 }
 
 fn generate_html_tasks(year: &str) -> String {
-    generate_html_tabs_side() + &generate_html_page_header(year) + 
+    generate_html_page_header(year) + &generate_html_tabs_side() +
     r##"<div class="tasks page" name="page_tasks"><ul class="circle">"## + &"<li></li>".repeat(22) + "</ul></div>"
 }
 
 fn generate_html_notes(year: &str) -> String {
-    generate_html_tabs_side() + &generate_html_page_header(year) + r##"<div class="notes page" name="page_notes"><ul>"## + &"<li>&nbsp;</li>".repeat(21) + "</ul></div>"
+    generate_html_page_header(year) + &generate_html_tabs_side() + r##"<div class="notes page" name="page_notes"><ul>"## + &"<li>&nbsp;</li>".repeat(21) + "</ul></div>"
 }
 
 fn main() -> std::io::Result<()> {
