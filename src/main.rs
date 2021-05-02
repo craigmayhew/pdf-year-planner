@@ -35,13 +35,14 @@ fn generate_html_style() -> String {
             width: 100%;
         }
         div.year_month a div {
+            display: inline-block;
             font-size: 4mm;
             font-weight: bold;
             height: 5mm;
             padding: 2mm;
             text-align: center;
             vertical-align: middle;
-            width: 6mm; display: inline-block;
+            width: 6mm;
         }
         div.year_month a div.weekend {
             color: #aaa;
@@ -57,10 +58,19 @@ fn generate_html_style() -> String {
             width: 140mm;
         }
         div.header div.year {
-            padding: 5mm 60mm 2mm 30mm;
+            padding: 5mm 0mm 2mm 20mm;
+            width: 115mm;
         }
         div.header div.year a {
             font-size: 20mm;
+        }
+        div.header div.year div {
+            border-left: 3px solid #000;
+            display: inline-block;
+            font-size: 5mm;
+            margin-left: 2mm;
+            padding-left: 2mm;
+            width: 40mm;
         }
         div.tabs_top div.tab a {
             font-size: 5mm;
@@ -108,12 +118,19 @@ fn generate_html_style() -> String {
     </style>"##.to_owned()
 }
 
-fn generate_html_page_header(year: &str) -> String {
-    "<div class=\"header\">
-        <div class=\"year\"><a href=\"#page_year\">".to_owned() + &year + "</a></div>
-    "
-    + &generate_html_tabs_top()
-    + "</div>"
+fn generate_html_page_header(year: &str, month: u32, day: u32) -> String {
+    "<div class=\"header\">".to_owned() +
+        "<div class=\"year\">" + 
+            "<a href=\"#page_year\">" + &year + "</a>" +
+            &if month == 0 {
+                "".to_owned()
+            } else {
+                let date = get_date(year, month, day);
+                "<div>".to_owned() + &date.format("Week %W<br>%A<br>%e %B").to_string() + "</div>"
+            } + 
+        "</div>" +
+        &generate_html_tabs_top() +
+    "</div>"
 }
 
 fn generate_html_tabs_top() -> String {
@@ -167,9 +184,17 @@ fn number_of_days_in_month(year: &str, month: u32) -> u32 {
     }
 }
 
-fn generate_tiny_month_calendar(year: &str, month: u32) -> String {
+fn get_date(year: &str, month: u32, day: u32) -> DateTime<Utc> {
     let naive_date: NaiveDateTime = NaiveDate::from_ymd(year.parse::<i32>().unwrap(), 1, 1).and_hms(1, 1, 1);
-    let mut date = DateTime::<Utc>::from_utc(naive_date.with_month(month).unwrap(), Utc);
+    if day > 0 {
+        DateTime::<Utc>::from_utc(naive_date.with_month(month).unwrap().with_day(day).unwrap(), Utc)
+    } else {
+        DateTime::<Utc>::from_utc(naive_date.with_month(month).unwrap(), Utc)
+    }
+}
+
+fn generate_tiny_month_calendar(year: &str, month: u32) -> String {
+    let mut date = get_date(year, month, 0);
     let days_in_month = number_of_days_in_month(year, month);
     let mut spacer_days_at_front: usize = 0;
     let mut html: String = r##"<div class="year_month">"##.to_owned();
@@ -178,7 +203,7 @@ fn generate_tiny_month_calendar(year: &str, month: u32) -> String {
         html += "</div>";
         for day in 1..=days_in_month {
             //set date
-            date = DateTime::<Utc>::from_utc(naive_date.with_month(month).unwrap().with_day(day).unwrap(), Utc);
+            date = get_date(year, month, day);
             let formatted_date = date.weekday();
 
             //add spacing at front of month if required
@@ -215,7 +240,7 @@ fn generate_html_year(year: &str) -> String {
     }
     html += "</div>";
     
-    generate_html_page_header(year) + &generate_html_tabs_side() + &html
+    generate_html_page_header(year, 0, 0) + &generate_html_tabs_side() + &html
 }
 
 fn generate_html_days(year: &str) -> String {
@@ -223,7 +248,7 @@ fn generate_html_days(year: &str) -> String {
     for month in 1..=12 {
         let days_in_month = number_of_days_in_month(year, month);
         for day in 1..=days_in_month {
-            let day_html = generate_html_page_header(year) + &generate_html_tabs_side() + 
+            let day_html = generate_html_page_header(year, month, day) + &generate_html_tabs_side() + 
             r##"<div class="day page" name="day_"## + &month.to_string() + "_" + &day.to_string() + "\">" + 
                 &generate_tiny_month_calendar(year, month) + 
                 r##"<div class="day_tasks"><ul class="circle">"## + &"<li></li>".repeat(4) + "</ul></div>" + 
@@ -236,12 +261,12 @@ fn generate_html_days(year: &str) -> String {
 }
 
 fn generate_html_tasks(year: &str) -> String {
-    generate_html_page_header(year) + &generate_html_tabs_side() +
+    generate_html_page_header(year, 0, 0) + &generate_html_tabs_side() +
     r##"<div class="tasks page" name="page_tasks"><ul class="circle">"## + &"<li></li>".repeat(22) + "</ul></div>"
 }
 
 fn generate_html_notes(year: &str) -> String {
-    generate_html_page_header(year) + &generate_html_tabs_side() + r##"<div class="notes page" name="page_notes"><ul>"## + &"<li>&nbsp;</li>".repeat(21) + "</ul></div>"
+    generate_html_page_header(year, 0, 0) + &generate_html_tabs_side() + r##"<div class="notes page" name="page_notes"><ul>"## + &"<li>&nbsp;</li>".repeat(21) + "</ul></div>"
 }
 
 fn main() -> std::io::Result<()> {
