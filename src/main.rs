@@ -1,4 +1,5 @@
 use chrono::{Datelike, DateTime, NaiveDate, NaiveDateTime, Utc};
+use std::env;
 use wkhtmltopdf::*;
 
 fn generate_html_style() -> String {
@@ -224,17 +225,26 @@ fn generate_html_notes(year: &str) -> String {
 }
 
 fn main() -> std::io::Result<()> {
-    let mut chosen_year = "2021";
+    let args: Vec<String> = env::args().collect();
+
+    // accept a single argument for year else default to the current year if it's absent
+    let chosen_year = if args.len() >1 && &args[1] != "" {
+        args[1].clone()
+    } else {
+        let naive_date_time = Utc::now().naive_utc().format("%Y").to_string();
+        naive_date_time
+    };
+
     let title = chosen_year.to_string() + " Year Planner";
     let filename = chosen_year.to_string() + ".pdf";
     let error_pdf_save = "failed to save ".to_owned() + &filename;
 
     // generate html
     let html = r##"<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">"##.to_owned() + &generate_html_style() + "</head><body>" +
-                &generate_html_year(chosen_year) +
-                &generate_html_days(chosen_year) +
-                &generate_html_tasks(chosen_year) +
-                &generate_html_notes(chosen_year) +
+                &generate_html_year(&chosen_year) +
+                &generate_html_days(&chosen_year) +
+                &generate_html_tasks(&chosen_year) +
+                &generate_html_notes(&chosen_year) +
                "</body></html>";
 
     // turn html into a pdf
