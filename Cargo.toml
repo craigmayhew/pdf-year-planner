@@ -5,7 +5,7 @@ authors = ["Craig Mayhew"]
 description = "The rust source code that generates PDF year planners"
 readme = "README.md"
 license = "GPL3"
-repository = "https://github.com/craigmayhew/pdf-year-planner.net"
+repository = "https://github.com/craigmayhew/pdf-year-planner"
 edition = "2018"
 
 [features]
