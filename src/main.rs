@@ -87,6 +87,9 @@ fn generate_html_style() -> String {
         div.header, div.header div.year, div.tabs_top, div.page, div.day_tasks, div.day_notes {
             float: left;
         }
+        div.author, div.author a {
+            font-size: 8mm;
+        }
         ul {
             list-style-type: none;
         }
@@ -234,6 +237,14 @@ fn generate_html_tasks(year: &str) -> String {
 fn generate_html_notes(year: &str) -> String {
     generate_html_page_header(year, 0, 0) + r##"<div class="notes page" name="page_notes"><ul>"## + &"<li>&nbsp;</li>".repeat(21) + "</ul></div>"
 }
+
+fn generate_html_author(year: &str) -> String {
+    generate_html_page_header(year, 0, 0) + r##"<div class="author page">
+    <p>Hello! If you are in need of next years planner, I have good news! This PDF and any year you need can be generated from this project:</p>
+    <p><a href="https://github.com/craigmayhew/pdf-year-planner">https://github.com/craigmayhew/pdf-year-planner</a></p>
+    <p>If you experience any problems, please raise a ticket describing what happened, what you expected to happen and what device you are using!</p>
+    <p>This document was generated with Rust. Ideas and contributions welcome!</p>
+    </div>"##
 }
 
 fn main() -> std::io::Result<()> {
