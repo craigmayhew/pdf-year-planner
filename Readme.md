@@ -2,7 +2,9 @@
 
 This is a rust project that generates pdf year planners full of linked pages for devices such as the Remarkable.
 
-Please check https://github.com/craigmayhew/pdf-year-planner/issues for feature requests and known issues.
+Year                     |  Days                   |  Tasks                  |  Notes
+-------------------------|-------------------------|-------------------------|-------------------------
+<img src="https://github.com/craigmayhew/pdf-year-planner/blob/main/imgs/example_year.svg" width="200" />  |  <img src="https://github.com/craigmayhew/pdf-year-planner/blob/main/imgs/example_day.svg" width="200" />  |  <img src="https://github.com/craigmayhew/pdf-year-planner/blob/main/imgs/example_tasks.svg" width="200" />  |  <img src="https://github.com/craigmayhew/pdf-year-planner/blob/main/imgs/example_notes.svg" width="200" />
 
 ## Where Can I download the latest PDF year planner?
 https://github.com/craigmayhew/pdf-year-planner/releases/latest/download/2021.pdf
@@ -27,3 +29,5 @@ wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmlt
 sudo apt install ./wkhtmltox_0.12.6-1.focal_amd64.deb
 rm wkhtmltox_0.12.6-1.focal_amd64.deb
 ```
+
+Please check https://github.com/craigmayhew/pdf-year-planner/issues for feature requests and known issues.
