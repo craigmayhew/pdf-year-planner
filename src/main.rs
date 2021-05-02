@@ -14,6 +14,7 @@ fn generate_html_style() -> String {
         }
         div.page {
             height: 297mm;
+            margin-left: 15mm;
             padding: 3mm;
             page-break-after: always;
             width: 225mm;
@@ -75,22 +76,6 @@ fn generate_html_style() -> String {
         div.tabs_top div.tab a {
             font-size: 5mm;
         }
-        div.tabs_side {
-            padding: 25mm 2mm 0mm 0mm;
-        }
-        div.tabs_side div.tab {
-            border: solid #ccc 1px;
-            border-radius: 2mm 0mm 0mm 2mm;
-            height: 20mm; width: 10mm;
-            margin: 2mm;
-            text-align: center;
-        }
-        div.tabs_side div.tab div {
-            font-size: 8mm;
-            padding: 8mm 0mm 6mm 0mm;
-            -webkit-transform: rotate(270deg);
-            -webkit-transform-origin: center bottom auto;
-        }
         div.tabs_top div.tab {
             border: solid #ccc 1px;
             border-radius: 2mm 2mm 0mm 0mm;
@@ -99,7 +84,7 @@ fn generate_html_style() -> String {
             padding: 3mm 2mm 1mm 2mm;
             text-align: center; width: 30mm;
         }
-        div.header, div.header div.year, div.tabs_top, div.tabs_side, div.page, div.day_tasks, div.day_notes {
+        div.header, div.header div.year, div.tabs_top, div.page, div.day_tasks, div.day_notes {
             float: left;
         }
         ul {
@@ -139,25 +124,6 @@ fn generate_html_tabs_top() -> String {
         <div class="tab calendar"><a href="#page_year">Calendar</a></div>
         <div class="tab tasks"><a href="#page_tasks">Tasks</a></div>
         <div class="tab notes"><a href="#page_notes">Notes</a></div>
-    </div>
-    "##.to_owned()
-}
-
-fn generate_html_tabs_side() -> String {
-    r##"
-    <div class="tabs_side">
-        <div class="tab jan"><div>JAN</div></div>
-        <div class="tab feb"><div>FEB</div></div>
-        <div class="tab mar"><div>MAR</div></div>
-        <div class="tab apr"><div>APR</div></div>
-        <div class="tab may"><div>MAY</div></div>
-        <div class="tab jun"><div>JUN</div></div>
-        <div class="tab jul"><div>JUL</div></div>
-        <div class="tab aug"><div>AUG</div></div>
-        <div class="tab sep"><div>SEP</div></div>
-        <div class="tab oct"><div>OCT</div></div>
-        <div class="tab nov"><div>NOV</div></div>
-        <div class="tab dec"><div>DEC</div></div>
     </div>
     "##.to_owned()
 }
@@ -240,7 +206,7 @@ fn generate_html_year(year: &str) -> String {
     }
     html += "</div>";
     
-    generate_html_page_header(year, 0, 0) + &generate_html_tabs_side() + &html
+    generate_html_page_header(year, 0, 0) + &html
 }
 
 fn generate_html_days(year: &str) -> String {
@@ -248,7 +214,7 @@ fn generate_html_days(year: &str) -> String {
     for month in 1..=12 {
         let days_in_month = number_of_days_in_month(year, month);
         for day in 1..=days_in_month {
-            let day_html = generate_html_page_header(year, month, day) + &generate_html_tabs_side() + 
+            let day_html = generate_html_page_header(year, month, day) + 
             r##"<div class="day page" name="day_"## + &month.to_string() + "_" + &day.to_string() + "\">" + 
                 &generate_tiny_month_calendar(year, month) + 
                 r##"<div class="day_tasks"><ul class="circle">"## + &"<li></li>".repeat(4) + "</ul></div>" + 
@@ -261,12 +227,13 @@ fn generate_html_days(year: &str) -> String {
 }
 
 fn generate_html_tasks(year: &str) -> String {
-    generate_html_page_header(year, 0, 0) + &generate_html_tabs_side() +
+    generate_html_page_header(year, 0, 0) +
     r##"<div class="tasks page" name="page_tasks"><ul class="circle">"## + &"<li></li>".repeat(22) + "</ul></div>"
 }
 
 fn generate_html_notes(year: &str) -> String {
-    generate_html_page_header(year, 0, 0) + &generate_html_tabs_side() + r##"<div class="notes page" name="page_notes"><ul>"## + &"<li>&nbsp;</li>".repeat(21) + "</ul></div>"
+    generate_html_page_header(year, 0, 0) + r##"<div class="notes page" name="page_notes"><ul>"## + &"<li>&nbsp;</li>".repeat(21) + "</ul></div>"
+}
 }
 
 fn main() -> std::io::Result<()> {
@@ -290,6 +257,7 @@ fn main() -> std::io::Result<()> {
                 &generate_html_days(&chosen_year) +
                 &generate_html_tasks(&chosen_year) +
                 &generate_html_notes(&chosen_year) +
+                &generate_html_author(&chosen_year) +
                "</body></html>";
 
     // turn html into a pdf
