@@ -10,8 +10,7 @@ If this is a bug report, please fill in as many of these as you can. Otherwise p
 <!--- Not obligatory, but suggest a fix/reason for the bug, -->
 
 ## Steps to Reproduce
-<!--- Provide a link to a live example, or an unambiguous set of steps to -->
-<!--- reproduce this bug. Include code to reproduce, if relevant -->
+<!--- Provide a set of steps so we can experience the bug too -->
 1.
 2.
 3.
