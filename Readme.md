@@ -2,8 +2,15 @@
 
 This is a rust project that generates pdf year planners full of linked pages for devices such as the Remarkable.
 
-PDF downloads available from here: 
 
+## Developers
+Generate your own, specifying the year you require:
+```
+rustup update
+git clone git@github.com:craigmayhew/pdf-year-planner.git
+cd pdf-year-planner
+cargo build --release && ./target/release/pdf_year_planner 2021
+```
 
 ## Developers FAQ
 Q: Any system dependencies?
