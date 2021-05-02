@@ -2,7 +2,7 @@
 name = "pdf_year_planner"
 version = "0.1.0"
 authors = ["Craig Mayhew"]
-description = "The rust source code that generates PDF year planners"
+description = "Rust source code that creates PDF year planners using WKHTMLTOPDF"
 readme = "README.md"
 license = "GPL3"
 repository = "https://github.com/craigmayhew/pdf-year-planner"
