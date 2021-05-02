@@ -4,13 +4,11 @@ use wkhtmltopdf::*;
 fn generate_html_style() -> String {
     r##"
     <style>
-        html,body,table,tr,td,ul {
-            margin: 0px;
-            padding: 0px;
-        }
-        a,div,td,th {
+        html,body,table,tr,td,ul,a,div,td,th {
             color: #000;
             font-size: 9px;
+            margin: 0px;
+            padding: 0px;
             text-decoration: none;
         }
         div.page {
