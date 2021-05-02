@@ -4,6 +4,9 @@ This is a rust project that generates pdf year planners full of linked pages for
 
 Please check https://github.com/craigmayhew/pdf-year-planner/issues for feature requests and known issues.
 
+## Where Can I download the latest PDF year planner?
+https://github.com/craigmayhew/pdf-year-planner/releases/latest/download/2021.pdf
+
 ## Developers
 Generate your own, specifying the year you require:
 ```
