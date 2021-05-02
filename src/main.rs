@@ -46,6 +46,16 @@ fn generate_html_style() -> String {
         div.year_month a div.weekend {
             color: #aaa;
         }
+        div.day_notes {
+            height: 200mm;
+            padding: 3mm;
+            width: 225mm;
+        }
+        div.day_tasks {
+            height: 70mm;
+            padding: 3mm;
+            width: 140mm;
+        }
         div.header div.year {
             padding: 5mm 60mm 2mm 30mm;
         }
@@ -79,7 +89,7 @@ fn generate_html_style() -> String {
             padding: 3mm 2mm 1mm 2mm;
             text-align: center; width: 30mm;
         }
-        div.header, div.header div.year, div.tabs_top, div.tabs_side, div.page {
+        div.header, div.header div.year, div.tabs_top, div.tabs_side, div.page, div.day_tasks, div.day_notes {
             float: left;
         }
         ul {
@@ -157,47 +167,51 @@ fn number_of_days_in_month(year: &str, month: u32) -> u32 {
     }
 }
 
-fn generate_html_year(year: &str) -> String {
+fn generate_tiny_month_calendar(year: &str, month: u32) -> String {
     let naive_date: NaiveDateTime = NaiveDate::from_ymd(year.parse::<i32>().unwrap(), 1, 1).and_hms(1, 1, 1);
+    let mut date = DateTime::<Utc>::from_utc(naive_date.with_month(month).unwrap(), Utc);
+    let days_in_month = number_of_days_in_month(year, month);
+    let mut spacer_days_at_front: usize = 0;
+    let mut html: String = r##"<div class="year_month">"##.to_owned();
+        html += "<div class=\"title\">";
+        html += &date.format("%B").to_string();
+        html += "</div>";
+        for day in 1..=days_in_month {
+            //set date
+            date = DateTime::<Utc>::from_utc(naive_date.with_month(month).unwrap().with_day(day).unwrap(), Utc);
+            let formatted_date = date.weekday();
+
+            //add spacing at front of month if required
+            if day == 1 {
+                spacer_days_at_front = match formatted_date {
+                    chrono::Weekday::Mon => 0,
+                    chrono::Weekday::Tue => 1,
+                    chrono::Weekday::Wed => 2,
+                    chrono::Weekday::Thu => 3,
+                    chrono::Weekday::Fri => 4,
+                    chrono::Weekday::Sat => 5,
+                    chrono::Weekday::Sun => 6,
+                };
+                html += &"<a><div></div></a>".repeat(spacer_days_at_front);
+            }
+
+            //figure out weekends for colour change
+            let weekend = if formatted_date == chrono::Weekday::Sat || formatted_date == chrono::Weekday::Sun {"weekend"} else {""};
+            
+            //create the html for the day link within the calendar month
+            let link = "<a href=\"#day_".to_owned() + &month.to_string() + "_" + &day.to_string() + "\"><div class=\""+weekend+"\">" + &day.to_string() + "</div></a>";
+            html += &link;
+        }
+        //add spacing at end of month if required
+        html += &"<a><div></div></a>".repeat(42 as usize - spacer_days_at_front as usize - days_in_month as usize);
+    html += "</div>";
+    html
+}
+
+fn generate_html_year(year: &str) -> String {
     let mut html: String = r##"<div id="page_year" class="year page" name="year">"##.to_owned();
     for month in 1..=12 {
-        let mut date = DateTime::<Utc>::from_utc(naive_date.with_month(month).unwrap(), Utc);
-        let days_in_month = number_of_days_in_month(year, month);
-        let mut spacer_days_at_front: usize = 0;
-
-        html += "<div class=\"year_month\">";
-            html += "<div class=\"title\">";
-            html += &date.format("%B").to_string();
-            html += "</div>";
-            for day in 1..=days_in_month {
-                //set date
-                date = DateTime::<Utc>::from_utc(naive_date.with_month(month).unwrap().with_day(day).unwrap(), Utc);
-                let formatted_date = date.weekday();
-
-                //add spacing at front of month if required
-                if day == 1 {
-                    spacer_days_at_front = match formatted_date {
-                        chrono::Weekday::Mon => 0,
-                        chrono::Weekday::Tue => 1,
-                        chrono::Weekday::Wed => 2,
-                        chrono::Weekday::Thu => 3,
-                        chrono::Weekday::Fri => 4,
-                        chrono::Weekday::Sat => 5,
-                        chrono::Weekday::Sun => 6,
-                    };
-                    html += &"<a><div></div></a>".repeat(spacer_days_at_front);
-                }
-
-                //figure out weekends for colour change
-                let weekend = if formatted_date == chrono::Weekday::Sat || formatted_date == chrono::Weekday::Sun {"weekend"} else {""};
-                
-                //create the html for the day link within the calendar month
-                let link = "<a href=\"#day_".to_owned() + &month.to_string() + "_" + &day.to_string() + "\"><div class=\""+weekend+"\">" + &day.to_string() + "</div></a>";
-                html += &link;
-            }
-            //add spacing at end of month if required
-            html += &"<a><div></div></a>".repeat(42 as usize - spacer_days_at_front as usize - days_in_month as usize);
-        html += "</div>";
+        html += &generate_tiny_month_calendar(year, month);
     }
     html += "</div>";
     
@@ -209,7 +223,12 @@ fn generate_html_days(year: &str) -> String {
     for month in 1..=12 {
         let days_in_month = number_of_days_in_month(year, month);
         for day in 1..=days_in_month {
-            let day_html = generate_html_page_header(year) + &generate_html_tabs_side() + r##"<div class="day page" name="day_"## + &month.to_string() + "_" + &day.to_string() + r##"" style="background-color: #f3f3f3;"></div>"##;
+            let day_html = generate_html_page_header(year) + &generate_html_tabs_side() + 
+            r##"<div class="day page" name="day_"## + &month.to_string() + "_" + &day.to_string() + "\">" + 
+                &generate_tiny_month_calendar(year, month) + 
+                r##"<div class="day_tasks"><ul class="circle">"## + &"<li></li>".repeat(4) + "</ul></div>" + 
+                r##"<div class="day_notes"><ul>"## + &"<li>&nbsp;</li>".repeat(16) + "</ul></div>" +
+            "</div>";
             html += &day_html;
         }
     }
