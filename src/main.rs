@@ -4,29 +4,92 @@ use wkhtmltopdf::*;
 fn generate_html_style() -> String {
     r##"
     <style>
-        html,body,table,tr,td,ul {margin: 0px; padding: 0px;}
-        a,div,td,th {color: #000; font-size: 9px; text-decoration: none;}
-
-        div.page {page-break-after: always; padding: 3mm; height: 297mm; width: 220mm;}
-
-        div.year_month {text-align: center; width: 68mm; height: 70mm; display: inline-block; margin-right: 5mm;}
-        div.year_month div.title {border-bottom: 1px #000 solid; font-size: 6mm; text-align: center; width: 100%; height: 7mm; display: inline-block;}
-        div.year_month a div {font-size: 4mm; height: 5mm; padding: 2mm; text-align: center; vertical-align: middle; width: 6mm; display: inline-block; font-weight: bold;}
-        div.year_month a div.weekend {color: #aaa;}
-
-        div.header div.year {padding: 5mm 60mm 2mm 20mm;}
-        div.header div.year a {font-size: 20mm;}
-        div.tabs_top div.tab a {font-size: 5mm;}
-
-        div.tabs_side {padding: 25mm 2mm 0mm 0mm;}
-        div.tabs_side div.tab {border: solid #ccc 1px; margin: 2mm; text-align: center; height: 20mm; width: 10mm; border-radius: 2mm 0mm 0mm 2mm;}
-        div.tabs_side div.tab div {font-size: 8mm; padding: 8mm 0mm 6mm 0mm; -webkit-transform: rotate(270deg); -webkit-transform-origin: center bottom auto;}
-
-        div.tabs_top div.tab {border: solid #ccc 1px; display: inline-block; margin-top: 12mm; padding: 3mm 2mm 1mm 2mm; text-align: center; width: 30mm; border-radius: 2mm 2mm 0mm 0mm;}
-        div.header, div.header div.year, div.tabs_top, div.tabs_side, div.page {float: left;}
-
-        ul {list-style-type: none;}
-        ul li {font-size: 12mm; border-bottom: 1px solid #eee; width: 100%;}
+        html,body,table,tr,td,ul {
+            margin: 0px;
+            padding: 0px;
+        }
+        a,div,td,th {
+            color: #000;
+            font-size: 9px;
+            text-decoration: none;
+        }
+        div.page {
+            height: 297mm;
+            padding: 3mm;
+            page-break-after: always;
+            width: 220mm;
+        }
+        div.year_month {
+            display: inline-block;
+            height: 70mm;
+            margin-right: 5mm;
+            text-align: center;
+            width: 68mm;
+        }
+        div.year_month div.title {
+            border-bottom: 1px #000 solid;
+            display: inline-block;
+            font-size: 6mm;
+            height: 7mm;
+            text-align: center;
+            width: 100%;
+        }
+        div.year_month a div {
+            font-size: 4mm;
+            font-weight: bold;
+            height: 5mm;
+            padding: 2mm;
+            text-align: center;
+            vertical-align: middle;
+            width: 6mm; display: inline-block;
+        }
+        div.year_month a div.weekend {
+            color: #aaa;
+        }
+        div.header div.year {
+            padding: 5mm 60mm 2mm 20mm;
+        }
+        div.header div.year a {
+            font-size: 20mm;
+        }
+        div.tabs_top div.tab a {
+            font-size: 5mm;
+        }
+        div.tabs_side {
+            padding: 25mm 2mm 0mm 0mm;
+        }
+        div.tabs_side div.tab {
+            border: solid #ccc 1px;
+            border-radius: 2mm 0mm 0mm 2mm;
+            height: 20mm; width: 10mm;
+            margin: 2mm;
+            text-align: center;
+        }
+        div.tabs_side div.tab div {
+            font-size: 8mm;
+            padding: 8mm 0mm 6mm 0mm;
+            -webkit-transform: rotate(270deg);
+            -webkit-transform-origin: center bottom auto;
+        }
+        div.tabs_top div.tab {
+            border: solid #ccc 1px;
+            border-radius: 2mm 2mm 0mm 0mm;
+            display: inline-block;
+            margin-top: 12mm;
+            padding: 3mm 2mm 1mm 2mm;
+            text-align: center; width: 30mm;
+        }
+        div.header, div.header div.year, div.tabs_top, div.tabs_side, div.page {
+            float: left;
+        }
+        ul {
+            list-style-type: none;
+        }
+        ul li {
+            border-bottom: 1px solid #eee;
+            font-size: 12mm;
+            width: 100%;
+        }
         ul.circle li::before {
             content: "☐ ";
         }
