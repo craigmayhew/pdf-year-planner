@@ -90,6 +90,7 @@ fn generate_html_style() -> String {
         }
         ul.circle li::before {
             content: "☐ ";
+            font-size: 6mm;
         }
         
     </style>"##.to_owned()
