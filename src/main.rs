@@ -216,7 +216,7 @@ fn generate_html_days(year: &str) -> String {
 
 fn generate_html_tasks(year: &str) -> String {
     generate_html_tabs_side() + &generate_html_page_header(year) + 
-    r##"<div class="tasks page" name="page_tasks"><ul class="circle"><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul></div>"##
+    r##"<div class="tasks page" name="page_tasks"><ul class="circle">"## + &"<li></li>".repeat(22) + "</ul></div>"
 }
 
 fn generate_html_notes(year: &str) -> String {
