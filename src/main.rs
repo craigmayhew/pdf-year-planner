@@ -1,4 +1,4 @@
-use chrono::{Datelike, DateTime, NaiveDate, NaiveDateTime, Utc};
+use chrono::{DateTime, Datelike, NaiveDate, NaiveDateTime, Utc};
 use std::env;
 use wkhtmltopdf::*;
 
@@ -103,22 +103,25 @@ fn generate_html_style() -> String {
             font-size: 6mm;
         }
         
-    </style>"##.to_owned()
+    </style>"##
+        .to_owned()
 }
 
 fn generate_html_page_header(year: &str, month: u32, day: u32) -> String {
-    "<div class=\"header\">".to_owned() +
-        "<div class=\"year\">" + 
-            "<a href=\"#page_year\">" + &year + "</a>" +
-            &if month == 0 {
-                "".to_owned()
-            } else {
-                let date = get_date(year, month, day);
-                "<div>".to_owned() + &date.format("Week %W<br>%A<br>%e %B").to_string() + "</div>"
-            } + 
-        "</div>" +
-        &generate_html_tabs_top() +
-    "</div>"
+    "<div class=\"header\">".to_owned()
+        + "<div class=\"year\">"
+        + "<a href=\"#page_year\">"
+        + &year
+        + "</a>"
+        + &if month == 0 {
+            "".to_owned()
+        } else {
+            let date = get_date(year, month, day);
+            "<div>".to_owned() + &date.format("Week %W<br>%A<br>%e %B").to_string() + "</div>"
+        }
+        + "</div>"
+        + &generate_html_tabs_top()
+        + "</div>"
 }
 
 fn generate_html_tabs_top() -> String {
@@ -128,10 +131,11 @@ fn generate_html_tabs_top() -> String {
         <div class="tab tasks"><a href="#page_tasks">Tasks</a></div>
         <div class="tab notes"><a href="#page_notes">Notes</a></div>
     </div>
-    "##.to_owned()
+    "##
+    .to_owned()
 }
 
-fn is_leap_year (year: i32) -> bool {
+fn is_leap_year(year: i32) -> bool {
     if year % 4 == 0 && year % 100 == 0 && year % 400 == 0 {
         true
     } else if year % 4 == 0 && year % 100 != 0 && year % 400 == 0 {
@@ -148,15 +152,19 @@ fn number_of_days_in_month(year: &str, month: u32) -> u32 {
         match month {
             2 => 28,
             4 | 6 | 9 | 11 => 30,
-            _ => 31
+            _ => 31,
         }
     }
 }
 
 fn get_date(year: &str, month: u32, day: u32) -> DateTime<Utc> {
-    let naive_date: NaiveDateTime = NaiveDate::from_ymd(year.parse::<i32>().unwrap(), 1, 1).and_hms(1, 1, 1);
+    let naive_date: NaiveDateTime =
+        NaiveDate::from_ymd(year.parse::<i32>().unwrap(), 1, 1).and_hms(1, 1, 1);
     if day > 0 {
-        DateTime::<Utc>::from_utc(naive_date.with_month(month).unwrap().with_day(day).unwrap(), Utc)
+        DateTime::<Utc>::from_utc(
+            naive_date.with_month(month).unwrap().with_day(day).unwrap(),
+            Utc,
+        )
     } else {
         DateTime::<Utc>::from_utc(naive_date.with_month(month).unwrap(), Utc)
     }
@@ -167,37 +175,51 @@ fn generate_tiny_month_calendar(year: &str, month: u32) -> String {
     let days_in_month = number_of_days_in_month(year, month);
     let mut spacer_days_at_front: usize = 0;
     let mut html: String = r##"<div class="year_month">"##.to_owned();
-        html += "<div class=\"title\">";
-        html += &date.format("%B").to_string();
-        html += "</div>";
-        for day in 1..=days_in_month {
-            //set date
-            date = get_date(year, month, day);
-            let formatted_date = date.weekday();
+    html += "<div class=\"title\">";
+    html += &date.format("%B").to_string();
+    html += "</div>";
+    for day in 1..=days_in_month {
+        //set date
+        date = get_date(year, month, day);
+        let formatted_date = date.weekday();
 
-            //add spacing at front of month if required
-            if day == 1 {
-                spacer_days_at_front = match formatted_date {
-                    chrono::Weekday::Mon => 0,
-                    chrono::Weekday::Tue => 1,
-                    chrono::Weekday::Wed => 2,
-                    chrono::Weekday::Thu => 3,
-                    chrono::Weekday::Fri => 4,
-                    chrono::Weekday::Sat => 5,
-                    chrono::Weekday::Sun => 6,
-                };
-                html += &"<a><div></div></a>".repeat(spacer_days_at_front);
-            }
-
-            //figure out weekends for colour change
-            let weekend = if formatted_date == chrono::Weekday::Sat || formatted_date == chrono::Weekday::Sun {"weekend"} else {""};
-            
-            //create the html for the day link within the calendar month
-            let link = "<a href=\"#day_".to_owned() + &month.to_string() + "_" + &day.to_string() + "\"><div class=\""+weekend+"\">" + &day.to_string() + "</div></a>";
-            html += &link;
+        //add spacing at front of month if required
+        if day == 1 {
+            spacer_days_at_front = match formatted_date {
+                chrono::Weekday::Mon => 0,
+                chrono::Weekday::Tue => 1,
+                chrono::Weekday::Wed => 2,
+                chrono::Weekday::Thu => 3,
+                chrono::Weekday::Fri => 4,
+                chrono::Weekday::Sat => 5,
+                chrono::Weekday::Sun => 6,
+            };
+            html += &"<a><div></div></a>".repeat(spacer_days_at_front);
         }
-        //add spacing at end of month if required
-        html += &"<a><div></div></a>".repeat(42 as usize - spacer_days_at_front as usize - days_in_month as usize);
+
+        //figure out weekends for colour change
+        let weekend =
+            if formatted_date == chrono::Weekday::Sat || formatted_date == chrono::Weekday::Sun {
+                "weekend"
+            } else {
+                ""
+            };
+
+        //create the html for the day link within the calendar month
+        let link = "<a href=\"#day_".to_owned()
+            + &month.to_string()
+            + "_"
+            + &day.to_string()
+            + "\"><div class=\""
+            + weekend
+            + "\">"
+            + &day.to_string()
+            + "</div></a>";
+        html += &link;
+    }
+    //add spacing at end of month if required
+    html += &"<a><div></div></a>"
+        .repeat(42 as usize - spacer_days_at_front as usize - days_in_month as usize);
     html += "</div>";
     html
 }
@@ -208,7 +230,7 @@ fn generate_html_year(year: &str) -> String {
         html += &generate_tiny_month_calendar(year, month);
     }
     html += "</div>";
-    
+
     generate_html_page_header(year, 0, 0) + &html
 }
 
@@ -217,12 +239,20 @@ fn generate_html_days(year: &str) -> String {
     for month in 1..=12 {
         let days_in_month = number_of_days_in_month(year, month);
         for day in 1..=days_in_month {
-            let day_html = generate_html_page_header(year, month, day) + 
-            r##"<div class="day page" name="day_"## + &month.to_string() + "_" + &day.to_string() + "\">" + 
-                &generate_tiny_month_calendar(year, month) + 
-                r##"<div class="day_tasks"><ul class="circle">"## + &"<li></li>".repeat(4) + "</ul></div>" + 
-                r##"<div class="day_notes"><ul>"## + &"<li>&nbsp;</li>".repeat(16) + "</ul></div>" +
-            "</div>";
+            let day_html = generate_html_page_header(year, month, day)
+                + r##"<div class="day page" name="day_"##
+                + &month.to_string()
+                + "_"
+                + &day.to_string()
+                + "\">"
+                + &generate_tiny_month_calendar(year, month)
+                + r##"<div class="day_tasks"><ul class="circle">"##
+                + &"<li></li>".repeat(4)
+                + "</ul></div>"
+                + r##"<div class="day_notes"><ul>"##
+                + &"<li>&nbsp;</li>".repeat(16)
+                + "</ul></div>"
+                + "</div>";
             html += &day_html;
         }
     }
@@ -230,16 +260,22 @@ fn generate_html_days(year: &str) -> String {
 }
 
 fn generate_html_tasks(year: &str) -> String {
-    generate_html_page_header(year, 0, 0) +
-    r##"<div class="tasks page" name="page_tasks"><ul class="circle">"## + &"<li></li>".repeat(22) + "</ul></div>"
+    generate_html_page_header(year, 0, 0)
+        + r##"<div class="tasks page" name="page_tasks"><ul class="circle">"##
+        + &"<li></li>".repeat(22)
+        + "</ul></div>"
 }
 
 fn generate_html_notes(year: &str) -> String {
-    generate_html_page_header(year, 0, 0) + r##"<div class="notes page" name="page_notes"><ul>"## + &"<li>&nbsp;</li>".repeat(21) + "</ul></div>"
+    generate_html_page_header(year, 0, 0)
+        + r##"<div class="notes page" name="page_notes"><ul>"##
+        + &"<li>&nbsp;</li>".repeat(21)
+        + "</ul></div>"
 }
 
 fn generate_html_author(year: &str) -> String {
-    generate_html_page_header(year, 0, 0) + r##"<div class="author page">
+    generate_html_page_header(year, 0, 0)
+        + r##"<div class="author page">
     <p>Hello! If you are in need of next years planner, I have good news! This PDF and any year you need can be generated from this project:</p>
     <p><a href="https://github.com/craigmayhew/pdf-year-planner">https://github.com/craigmayhew/pdf-year-planner</a></p>
     <p>If you experience any problems, please raise a ticket describing what happened, what you expected to happen and what device you are using!</p>
@@ -251,7 +287,7 @@ fn main() -> std::io::Result<()> {
     let args: Vec<String> = env::args().collect();
 
     // accept a single argument for year else default to the current year if it's absent
-    let chosen_year = if args.len() >1 && &args[1] != "" {
+    let chosen_year = if args.len() > 1 && &args[1] != "" {
         args[1].clone()
     } else {
         let naive_date_time = Utc::now().naive_utc().format("%Y").to_string();
@@ -263,24 +299,29 @@ fn main() -> std::io::Result<()> {
     let error_pdf_save = "failed to save ".to_owned() + &filename;
 
     // generate html
-    let html = r##"<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">"##.to_owned() + &generate_html_style() + "</head><body>" +
-                &generate_html_year(&chosen_year) +
-                &generate_html_days(&chosen_year) +
-                &generate_html_tasks(&chosen_year) +
-                &generate_html_notes(&chosen_year) +
-                &generate_html_author(&chosen_year) +
-               "</body></html>";
+    let html =
+        r##"<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">"##
+            .to_owned()
+            + &generate_html_style()
+            + "</head><body>"
+            + &generate_html_year(&chosen_year)
+            + &generate_html_days(&chosen_year)
+            + &generate_html_tasks(&chosen_year)
+            + &generate_html_notes(&chosen_year)
+            + &generate_html_author(&chosen_year)
+            + "</body></html>";
 
     // turn html into a pdf
     let mut pdf_app = PdfApplication::new().expect("Failed to init PDF application");
-    let mut pdfout = pdf_app.builder()
+    let mut pdfout = pdf_app
+        .builder()
         .orientation(Orientation::Portrait)
         .page_size(PageSize::A4)
         .margin(Size::Millimeters(5))
         .title(&title)
         .build_from_html(&html)
         .expect("failed to build pdf");
-    
+
     //save the pdf
     pdfout.save(&filename).expect(&error_pdf_save);
     Ok(())
