@@ -312,7 +312,7 @@ fn main() -> std::io::Result<()> {
             + "</body></html>";
 
     // turn html into a pdf
-    let mut pdf_app = PdfApplication::new().expect("Failed to init PDF application");
+    let pdf_app = PdfApplication::new().expect("Failed to init PDF application");
     let mut pdfout = pdf_app
         .builder()
         .orientation(Orientation::Portrait)
