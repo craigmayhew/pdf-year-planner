@@ -48,6 +48,22 @@ fn generate_html_style() -> String {
         div.year_month a div.weekend {
             color: #aaa;
         }
+        div.year_month a div {
+            position: relative;
+        }
+        div.year_month a div div.circled {
+            color: #000;
+            font-size: 3mm;
+            height: 3mm;
+            left: 0;
+            margin: 0;
+            position: absolute;
+            text-align: left;
+            top: 0;
+            vertical-align: top;
+            width: 5mm;
+            z-index: 9;
+        }
         div.day_notes {
             height: 200mm;
             padding: 3mm;
@@ -101,6 +117,11 @@ fn generate_html_style() -> String {
         ul.circle li::before {
             content: "☐ ";
             font-size: 6mm;
+        }
+        div.year_month a div div.circled {
+            border: 2px solid #000;
+            border-radius: 40px 60px 40px 60px;
+            -webkit-transform: rotate(-15deg);
         }
 
         div.day div.year_month {
@@ -174,7 +195,7 @@ fn get_date(year: &str, month: u32, day: u32) -> DateTime<Utc> {
     }
 }
 
-fn generate_tiny_month_calendar(year: &str, month: u32) -> String {
+fn generate_tiny_month_calendar(year: &str, month: u32, current_day: u32) -> String {
     let mut date = get_date(year, month, 0);
     let days_in_month = number_of_days_in_month(year, month);
     let mut spacer_days_at_front: usize = 0;
@@ -209,6 +230,13 @@ fn generate_tiny_month_calendar(year: &str, month: u32) -> String {
                 ""
             };
 
+        let today =
+            if current_day == day {
+                r##"<div class="circled"></div>"##
+            } else {
+                ""
+            };
+
         //create the html for the day link within the calendar month
         let link = "<a href=\"#day_".to_owned()
             + &month.to_string()
@@ -217,6 +245,7 @@ fn generate_tiny_month_calendar(year: &str, month: u32) -> String {
             + "\"><div class=\""
             + weekend
             + "\">"
+            + today
             + &day.to_string()
             + "</div></a>";
         html += &link;
@@ -231,7 +260,7 @@ fn generate_tiny_month_calendar(year: &str, month: u32) -> String {
 fn generate_html_year(year: &str) -> String {
     let mut html: String = r##"<div id="page_year" class="year page" name="year">"##.to_owned();
     for month in 1..=12 {
-        html += &generate_tiny_month_calendar(year, month);
+        html += &generate_tiny_month_calendar(year, month, 0);
     }
     html += "</div>";
 
@@ -249,7 +278,7 @@ fn generate_html_days(year: &str) -> String {
                 + "_"
                 + &day.to_string()
                 + "\">"
-                + &generate_tiny_month_calendar(year, month)
+                + &generate_tiny_month_calendar(year, month, day)
                 + r##"<div class="day_tasks"><ul class="circle">"##
                 + &"<li></li>".repeat(4)
                 + "</ul></div>"
