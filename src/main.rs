@@ -133,7 +133,7 @@ fn generate_html_style() -> String {
         }
 
         div.day div.year_month {
-            margin-top: 0mm;
+            margin-top: 2mm;
         }
         
     </style>"##
