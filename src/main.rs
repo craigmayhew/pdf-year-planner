@@ -51,17 +51,16 @@ fn generate_html_style() -> String {
         div.year_month a div {
             position: relative;
         }
-        div.year_month a div div.circled {
+        div.year_month a div div.circled_single,
+        div.year_month a div div.circled_double {
             color: #000;
             font-size: 3mm;
             height: 3mm;
-            left: 0;
             margin: 0;
             position: absolute;
             text-align: left;
             top: 0;
             vertical-align: top;
-            width: 5mm;
             z-index: 9;
         }
         div.day_notes {
@@ -118,10 +117,19 @@ fn generate_html_style() -> String {
             content: "☐ ";
             font-size: 6mm;
         }
-        div.year_month a div div.circled {
+        div.year_month a div div.circled_single {
             border: 2px solid #000;
             border-radius: 40px 60px 40px 60px;
+            left: 1mm;
             -webkit-transform: rotate(-15deg);
+            width: 3mm;
+        }
+        div.year_month a div div.circled_double {
+            border: 2px solid #000;
+            border-radius: 40px 60px 40px 60px;
+            left: 0;
+            -webkit-transform: rotate(-15deg);
+            width: 5mm;
         }
 
         div.day div.year_month {
@@ -232,7 +240,11 @@ fn generate_tiny_month_calendar(year: &str, month: u32, current_day: u32) -> Str
 
         let today =
             if current_day == day {
-                r##"<div class="circled"></div>"##
+                if day < 10 {
+                    r##"<div class="circled_single"></div>"##
+                } else {
+                    r##"<div class="circled_double"></div>"##
+                }
             } else {
                 ""
             };
