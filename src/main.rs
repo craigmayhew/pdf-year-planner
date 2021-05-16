@@ -304,7 +304,7 @@ fn main() -> std::io::Result<()> {
 
     // generate html
     let html =
-        r##"<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">"##
+        r##"<!DOCTYPE html><html><head><meta charset="utf-8">"##
             .to_owned()
             + &generate_html_style()
             + "</head><body>"
