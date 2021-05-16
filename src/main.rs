@@ -102,6 +102,10 @@ fn generate_html_style() -> String {
             content: "☐ ";
             font-size: 6mm;
         }
+
+        div.day div.year_month {
+            margin-top: 0mm;
+        }
         
     </style>"##
         .to_owned()
