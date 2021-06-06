@@ -7,7 +7,7 @@ Year                     |  Days                   |  Tasks                  |  
 <img src="https://github.com/craigmayhew/pdf-year-planner/blob/main/imgs/example_year.svg" width="200" />  |  <img src="https://github.com/craigmayhew/pdf-year-planner/blob/main/imgs/example_day.svg" width="200" />  |  <img src="https://github.com/craigmayhew/pdf-year-planner/blob/main/imgs/example_tasks.svg" width="200" />  |  <img src="https://github.com/craigmayhew/pdf-year-planner/blob/main/imgs/example_notes.svg" width="200" />
 
 ## Where Can I download the latest PDF year planner?
-https://github.com/craigmayhew/pdf-year-planner/releases/latest/download/2021.pdf
+https://github.com/craigmayhew/pdf-year-planner/releases/latest/download/2021.1.pdf
 
 ## Developers
 Generate your own, specifying the year you require:
