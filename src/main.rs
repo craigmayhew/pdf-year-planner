@@ -1,5 +1,7 @@
 use chrono::{DateTime, Datelike, NaiveDate, NaiveDateTime, Utc};
 use std::env;
+use std::io::prelude::*;                                                           
+use std::io;    
 use wkhtmltopdf::*;
 
 fn generate_html_style() -> String {
@@ -343,6 +345,10 @@ fn main() -> std::io::Result<()> {
     let filename = chosen_year.to_string() + ".pdf";
     let error_pdf_save = "failed to save ".to_owned() + &filename;
 
+    
+    print!("Generating {} ... This may take a few minutes... ",filename);
+    io::stdout().flush().ok().expect("Could not flush stdout");
+
     // generate html
     let html =
         r##"<!DOCTYPE html><html><head><meta charset="utf-8">"##
@@ -369,5 +375,7 @@ fn main() -> std::io::Result<()> {
 
     //save the pdf
     pdfout.save(&filename).expect(&error_pdf_save);
+
+    print!("{}","Done");
     Ok(())
 }
