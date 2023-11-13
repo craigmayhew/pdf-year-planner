@@ -22,12 +22,12 @@ cargo build --release && ./target/release/pdf_year_planner 2021
 Q: Any system dependencies?
 A: Yes. The wkhtmltopdf OS package.
 
-Q: I'm on ubuntu and I am unable to install wkhtmltopdf
+Q: I'm on ubuntu 22.04 and I am unable to install wkhtmltopdf
 A: Download the package from this git repo and install from there:
 ```sh
-wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.focal_amd64.deb
-sudo apt install ./wkhtmltox_0.12.6-1.focal_amd64.deb
-rm wkhtmltox_0.12.6-1.focal_amd64.deb
+wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-3/wkhtmltox_0.12.6.1-3.jammy_amd64.deb
+sudo apt install ./wkhtmltox_0.12.6.1-3.jammy_amd64.deb
+rm wkhtmltox_0.12.6.1-3.jammy_amd64.deb
 ```
 
 Please check https://github.com/craigmayhew/pdf-year-planner/issues for feature requests and known issues.
