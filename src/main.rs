@@ -171,24 +171,26 @@ fn generate_html_tabs_top() -> String {
 }
 
 fn is_leap_year(year: i32) -> bool {
-    if year % 4 == 0 && year % 100 == 0 && year % 400 == 0 {
-        true
-    } else if year % 4 == 0 && year % 100 != 0 && year % 400 == 0 {
-        true
+    if year % 400 == 0 {
+        true // If a year is divisible by 400, it's definitely a leap year.
+    } else if year % 100 == 0 {
+        false // If it's divisible by 100 but not by 400, it's not a leap year.
     } else {
-        false
+        year % 4 == 0 // If it's divisible by 4 (and we've already ruled out the other cases), it's a leap year!
     }
 }
 
 fn number_of_days_in_month(year: &str, month: u32) -> u32 {
-    if month == 2 && is_leap_year(year.parse::<i32>().unwrap()) {
-        29
-    } else {
-        match month {
-            2 => 28,
-            4 | 6 | 9 | 11 => 30,
-            _ => 31,
+    match month {
+        2 => {
+            if is_leap_year(year.parse::<i32>().unwrap()) {
+                29
+            } else {
+                28
+            }
         }
+        4 | 6 | 9 | 11 => 30,
+        _ => 31,
     }
 }
 
