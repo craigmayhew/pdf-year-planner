@@ -1,7 +1,7 @@
 use chrono::{DateTime, Datelike, NaiveDate, NaiveDateTime, Utc};
 use std::env;
-use std::io::prelude::*;                                                           
-use std::io;    
+use std::io;
+use std::io::prelude::*;
 use wkhtmltopdf::*;
 
 fn generate_html_style() -> String {
@@ -195,8 +195,10 @@ fn number_of_days_in_month(year: &str, month: u32) -> u32 {
 }
 
 fn get_date(year: &str, month: u32, day: u32) -> DateTime<Utc> {
-    let naive_date: NaiveDateTime =
-        NaiveDate::from_ymd_opt(year.parse::<i32>().unwrap(), 1, 1).expect("ERROR: Year did not parse").and_hms_opt(1, 1, 1).expect("ERROR: Expected a naive date but we errored!");
+    let naive_date: NaiveDateTime = NaiveDate::from_ymd_opt(year.parse::<i32>().unwrap(), 1, 1)
+        .expect("ERROR: Year did not parse")
+        .and_hms_opt(1, 1, 1)
+        .expect("ERROR: Expected a naive date but we errored!");
     if day > 0 {
         DateTime::<Utc>::from_naive_utc_and_offset(
             naive_date.with_month(month).unwrap().with_day(day).unwrap(),
@@ -242,16 +244,15 @@ fn generate_tiny_month_calendar(year: &str, month: u32, current_day: u32) -> Str
                 ""
             };
 
-        let today =
-            if current_day == day {
-                if day < 10 {
-                    r##"<div class="circled_single"></div>"##
-                } else {
-                    r##"<div class="circled_double"></div>"##
-                }
+        let today = if current_day == day {
+            if day < 10 {
+                r##"<div class="circled_single"></div>"##
             } else {
-                ""
-            };
+                r##"<div class="circled_double"></div>"##
+            }
+        } else {
+            ""
+        };
 
         //create the html for the day link within the calendar month
         let link = "<a href=\"#day_".to_owned()
@@ -347,22 +348,22 @@ fn main() -> std::io::Result<()> {
     let filename = chosen_year.to_string() + ".pdf";
     let error_pdf_save = "failed to save ".to_owned() + &filename;
 
-    
-    print!("Generating {} ... This may take a few minutes... ",filename);
+    print!(
+        "Generating {} ... This may take a few minutes... ",
+        filename
+    );
     io::stdout().flush().ok().expect("Could not flush stdout");
 
     // generate html
-    let html =
-        r##"<!DOCTYPE html><html><head><meta charset="utf-8">"##
-            .to_owned()
-            + &generate_html_style()
-            + "</head><body>"
-            + &generate_html_year(&chosen_year)
-            + &generate_html_days(&chosen_year)
-            + &generate_html_tasks(&chosen_year)
-            + &generate_html_notes(&chosen_year)
-            + &generate_html_author(&chosen_year)
-            + "</body></html>";
+    let html = r##"<!DOCTYPE html><html><head><meta charset="utf-8">"##.to_owned()
+        + &generate_html_style()
+        + "</head><body>"
+        + &generate_html_year(&chosen_year)
+        + &generate_html_days(&chosen_year)
+        + &generate_html_tasks(&chosen_year)
+        + &generate_html_notes(&chosen_year)
+        + &generate_html_author(&chosen_year)
+        + "</body></html>";
 
     // turn html into a pdf
     let pdf_app = PdfApplication::new().expect("Failed to init PDF application");
