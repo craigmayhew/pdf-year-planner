@@ -196,12 +196,12 @@ fn get_date(year: &str, month: u32, day: u32) -> DateTime<Utc> {
     let naive_date: NaiveDateTime =
         NaiveDate::from_ymd_opt(year.parse::<i32>().unwrap(), 1, 1).expect("ERROR: Year did not parse").and_hms_opt(1, 1, 1).expect("ERROR: Expected a naive date but we errored!");
     if day > 0 {
-        DateTime::<Utc>::from_utc(
+        DateTime::<Utc>::from_naive_utc_and_offset(
             naive_date.with_month(month).unwrap().with_day(day).unwrap(),
             Utc,
         )
     } else {
-        DateTime::<Utc>::from_utc(naive_date.with_month(month).unwrap(), Utc)
+        DateTime::<Utc>::from_naive_utc_and_offset(naive_date.with_month(month).unwrap(), Utc)
     }
 }
 
