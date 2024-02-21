@@ -376,6 +376,6 @@ fn main() -> std::io::Result<()> {
     //save the pdf
     pdfout.save(&filename).expect(&error_pdf_save);
 
-    print!("{}","Done");
+    println!("{}", "Done");
     Ok(())
 }
