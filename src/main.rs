@@ -149,7 +149,7 @@ fn generate_html_page_header(year: &str, month: u32, day: u32) -> String {
         + &year
         + "</a>"
         + &if month == 0 {
-            "".to_owned()
+            String::new()
         } else {
             let date = get_date(year, month, day);
             "<div>".to_owned() + &date.format("Week %W<br>%A<br>%e %B").to_string() + "</div>"
@@ -285,7 +285,7 @@ fn generate_html_year(year: &str) -> String {
 }
 
 fn generate_html_days(year: &str) -> String {
-    let mut html: String = "".to_owned();
+    let mut html: String = String::new();
     for month in 1..=12 {
         let days_in_month = number_of_days_in_month(year, month);
         for day in 1..=days_in_month {
