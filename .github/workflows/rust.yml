@@ -2,23 +2,43 @@ name: Rust
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 env:
   CARGO_TERM_COLOR: always
 
 jobs:
   build:
-
     runs-on: ubuntu-22.04
 
     steps:
-    - uses: actions/checkout@v3
-    - name: wget and install .deb
-      run: wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-3/wkhtmltox_0.12.6.1-3.jammy_amd64.deb && sudo apt install ./wkhtmltox_0.12.6.1-3.jammy_amd64.deb && rm wkhtmltox_0.12.6.1-3.jammy_amd64.deb
-    - name: Build
-      run: cargo build --verbose
-    - name: Run tests
-      run: cargo test --verbose
+      - uses: actions/checkout@v3
+      - name: Install wkhtmltox .deb
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential pkg-config wget
+          wget -O wkhtmltox.deb https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-3/wkhtmltox_0.12.6.1-3.jammy_amd64.deb
+          sudo apt-get install -y ./wkhtmltox.deb
+          rm wkhtmltox.deb
+      - name: Make libwkhtmltox discoverable for the linker
+        run: |
+          if [ -f /usr/local/lib/libwkhtmltox.so.0 ] && [ ! -f /usr/local/lib/libwkhtmltox.so ]; then
+            sudo ln -s /usr/local/lib/libwkhtmltox.so.0 /usr/local/lib/libwkhtmltox.so
+          fi
+          echo '/usr/local/lib' | sudo tee /etc/ld.so.conf.d/wkhtmltox.conf
+          sudo ldconfig
+          ls -l /usr/local/lib/libwkhtmltox*
+      - name: Build
+        env:
+          RUSTFLAGS: "-C link-arg=-L/usr/local/lib"
+          LIBRARY_PATH: "/usr/local/lib"
+          PKG_CONFIG_PATH: "/usr/local/lib/pkgconfig"
+        run: cargo build --verbose
+      - name: Run tests
+        env:
+          RUSTFLAGS: "-C link-arg=-L/usr/local/lib"
+          LIBRARY_PATH: "/usr/local/lib"
+          PKG_CONFIG_PATH: "/usr/local/lib/pkgconfig"
+        run: cargo test --verbose

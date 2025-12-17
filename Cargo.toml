@@ -1,12 +1,12 @@
 [package]
 name = "pdf_year_planner"
-version = "1.1.0"
+version = "1.1.1"
 authors = ["Craig Mayhew"]
 description = "Rust source code that creates PDF year planners using WKHTMLTOPDF"
 readme = "README.md"
 license = "GPL3"
 repository = "https://github.com/craigmayhew/pdf-year-planner"
-edition = "2018"
+edition = "2021"
 
 [features]
 
