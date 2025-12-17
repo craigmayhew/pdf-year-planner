@@ -9,6 +9,7 @@ Year                     |  Days                   |  Tasks                  |  
 ## Where Can I download the latest PDF year planner?
 https://github.com/craigmayhew/pdf-year-planner/releases/latest/download/2026.pdf
 
+
 ## Developers
 Generate your own, specifying the year you require:
 ```sh
