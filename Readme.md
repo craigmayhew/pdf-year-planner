@@ -7,11 +7,11 @@ Year                     |  Days                   |  Tasks                  |  
 <img src="https://github.com/craigmayhew/pdf-year-planner/blob/main/imgs/example_year.svg" width="200" />  |  <img src="https://github.com/craigmayhew/pdf-year-planner/blob/main/imgs/example_day.svg" width="200" />  |  <img src="https://github.com/craigmayhew/pdf-year-planner/blob/main/imgs/example_tasks.svg" width="200" />  |  <img src="https://github.com/craigmayhew/pdf-year-planner/blob/main/imgs/example_notes.svg" width="200" />
 
 ## Where Can I download the latest PDF year planner?
-https://github.com/craigmayhew/pdf-year-planner/releases/latest/download/2021.1.pdf
+https://github.com/craigmayhew/pdf-year-planner/releases/latest/download/2026.1.pdf
 
 ## Developers
 Generate your own, specifying the year you require:
-```
+```sh
 rustup update
 git clone git@github.com:craigmayhew/pdf-year-planner.git
 cd pdf-year-planner
@@ -20,7 +20,7 @@ cargo build --release && ./target/release/pdf_year_planner 2021
 
 ## Developers FAQ
 Q: Any system dependencies?
-A: Yes. The wkhtmltopdf OS package.
+A: Yes. The wkhtmltopdf OS package. Please note, that while it works, it is no longer actively developed and I am in search of a rust-native replacement.
 
 Q: I'm on ubuntu 22.04 and I am unable to install wkhtmltopdf
 A: Download the package from this git repo and install from there:
