@@ -42,3 +42,32 @@ jobs:
           LIBRARY_PATH: "/usr/local/lib"
           PKG_CONFIG_PATH: "/usr/local/lib/pkgconfig"
         run: cargo test --verbose
+
+      - name: Build release
+        env:
+          RUSTFLAGS: "-C link-arg=-L/usr/local/lib"
+          LIBRARY_PATH: "/usr/local/lib"
+          PKG_CONFIG_PATH: "/usr/local/lib/pkgconfig"
+        run: cargo build --release --verbose
+
+      - name: Generate next 5 years PDFs
+        run: |
+          set -e
+          OUT="generated"
+          mkdir -p "$OUT"
+          Y="$(date +%Y)"
+          for i in 0 1 2 3 4; do
+            YEAR=$((Y+i))
+            ./target/release/pdf_year_planner "$YEAR"
+            mv "$YEAR.pdf" "$OUT/"
+          done
+          ls -l "$OUT"
+
+      - name: Upload PDFs
+        uses: actions/upload-artifact@v4
+        with:
+          name: year-planners
+          path: generated/*.pdf
+          if-no-files-found: error
+          retention-days: 7
+
