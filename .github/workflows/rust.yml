@@ -70,3 +70,4 @@ jobs:
           path: generated/*.pdf
           if-no-files-found: error
           retention-days: 7
+
